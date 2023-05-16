@@ -168,39 +168,33 @@ def check_sudoku(sudoku):
     return True
 
 
-def play():
-    data = [
-        [0, 0, 0, 9, 0, 0, 0, 3, 0],
-        [3, 0, 6, 0, 2, 0, 0, 4, 0],
-        [2, 0, 4, 0, 0, 3, 1, 0, 6],
-        [0, 7, 0, 0, 5, 1, 0, 8, 0],
-        [0, 3, 1, 0, 6, 0, 0, 5, 7],
-        [5, 0, 9, 0, 0, 0, 6, 0, 0],
-        [4, 1, 0, 0, 0, 2, 0, 7, 8],
-        [7, 6, 3, 0, 0, 5, 4, 0, 0],
-        [9, 2, 8, 0, 0, 4, 0, 0, 1]
-    ]
-    ### data lvl 2
-    data2 = [
-        [0, 2, 0, 0, 0, 6, 8, 0, 0],
-        [4, 8, 0, 0, 0, 7, 6, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0, 4, 0],
-        [8, 0, 7, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 8, 6, 4, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 3, 0, 8],
-        [0, 1, 0, 0, 4, 0, 0, 0, 0],
-        [0, 0, 2, 5, 0, 0, 0, 7, 9],
-        [0, 0, 8, 9, 0, 0, 0, 3, 0]
-    ]
-    # while True:
-    #     data = initBoard("easy")
-    #     game = Sudoku(data)
-    #     if(game.test_solve()):
-    #         print("Game is Solvable\n")
-    #         break
-    #     else:
-    #         print("Not Solvable", "Generating new board", sep='\n')
-    game = Sudoku(data2)
+def play(lvl):
+    if lvl == 1:
+        data = [
+            [0, 0, 0, 9, 0, 0, 0, 3, 0],
+            [3, 0, 6, 0, 2, 0, 0, 4, 0],
+            [2, 0, 4, 0, 0, 3, 1, 0, 6],
+            [0, 7, 0, 0, 5, 1, 0, 8, 0],
+            [0, 3, 1, 0, 6, 0, 0, 5, 7],
+            [5, 0, 9, 0, 0, 0, 6, 0, 0],
+            [4, 1, 0, 0, 0, 2, 0, 7, 8],
+            [7, 6, 3, 0, 0, 5, 4, 0, 0],
+            [9, 2, 8, 0, 0, 4, 0, 0, 1]
+        ]
+    elif lvl == 2:
+        ### data lvl 2
+        data = [
+            [0, 2, 0, 0, 0, 6, 8, 0, 0],
+            [4, 8, 0, 0, 0, 7, 6, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 4, 0],
+            [8, 0, 7, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 8, 6, 4, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 3, 0, 8],
+            [0, 1, 0, 0, 4, 0, 0, 0, 0],
+            [0, 0, 2, 5, 0, 0, 0, 7, 9],
+            [0, 0, 8, 9, 0, 0, 0, 3, 0]
+        ]
+    game = Sudoku(data)
     cells = create_cells()
     active_cell = None
     solve_rect = pygame.Rect(
@@ -249,6 +243,11 @@ def play():
                         screen
                     )
                     pygame.display.flip()
+
+                if back_btn.collidepoint(mouse_pos):
+                    screen.fill(white)
+                    pygame.display.set_mode((300, height))
+                    return
 
                 active_cell = None
                 for row in cells:
@@ -336,6 +335,30 @@ def play():
                 screen
             )
 
+        back_btn = draw_button(
+            width - buffer*3 - button_border*6 - button_width*3,
+            height - button_height - button_border*2 - buffer,
+            button_width,
+            button_height,
+            button_border,
+            inactive_btn,
+            black,
+            'Back',
+            screen
+        )
+        if back_btn.collidepoint(pygame.mouse.get_pos()):
+            back_btn = draw_button(
+                width - buffer*3 - button_border*6 - button_width*3,
+                height - button_height - button_border*2 - buffer,
+                button_width,
+                button_height,
+                button_border,
+                active_btn,
+                black,
+                'Back',
+                screen
+        )
+
         if not game.get_empty_cell():
             if check_sudoku(game):
                 font = pygame.font.Font(None, 36)
@@ -359,15 +382,15 @@ def level():
                 if lvl1_btn.collidepoint(mouse_pos):
                     screen.fill(white)
                     pygame.display.flip()
-                    play()
+                    play(1)
                 if lvl2_btn.collidepoint(mouse_pos):
                     screen.fill(white)
                     pygame.display.flip()
-                    play()
+                    play(2)
                 if lvl3_btn.collidepoint(mouse_pos):
                     screen.fill(white)
                     pygame.display.flip()
-                    play()
+                    play(2)
                 if back_btn.collidepoint(mouse_pos):
                     screen.fill(white)
                     pygame.display.flip()
