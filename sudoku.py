@@ -200,7 +200,7 @@ def play():
     #         break
     #     else:
     #         print("Not Solvable", "Generating new board", sep='\n')
-    game = Sudoku(data)
+    game = Sudoku(data2)
     cells = create_cells()
     active_cell = None
     solve_rect = pygame.Rect(
