@@ -28,11 +28,13 @@ active_btn = 51, 153, 255
 # menuscreen = pygame.display.set_mode(size)
 pygame.display.set_caption('Kelompok 13 - SUDOKU SOLVER')
 
+
 class RectCell(pygame.Rect):
     def __init__(self, left, top, row, col):
         super().__init__(left, top, cell_size, cell_size)
         self.row = row
         self.col = col
+
 
 def create_cells():
     cells = [[] for _ in range(9)]
@@ -60,12 +62,20 @@ def create_cells():
 
     return cells
 
+
 def draw_grid(screen):
     lines_drawn = 0
     pos = buffer + major_grid_size + cell_size
+    # draw grid with jigsaw pattern
+
+    pygame.draw.line(screen, black, (pos, buffer),
+                     (pos, width-buffer-1), minor_grid_size)
+    # pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
     while lines_drawn < 6:
-        pygame.draw.line(screen, black, (pos, buffer), (pos, width-buffer-1), minor_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
+        pygame.draw.line(screen, black, (pos, buffer),
+                         (pos, width-buffer-1), minor_grid_size)
+        pygame.draw.line(screen, black, (buffer, pos),
+                         (width-buffer-1, pos), minor_grid_size)
 
         lines_drawn += 1
 
@@ -74,8 +84,11 @@ def draw_grid(screen):
             pos += cell_size + major_grid_size
 
     for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
-        pygame.draw.line(screen, black, (pos, buffer), (pos, width-buffer-1), major_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), major_grid_size)
+        pygame.draw.line(screen, black, (pos, buffer),
+                         (pos, width-buffer-1), major_grid_size)
+        pygame.draw.line(screen, black, (buffer, pos),
+                         (width-buffer-1, pos), major_grid_size)
+
 
 def fill_cells(cells, board, screen):
     font = pygame.font.Font(None, 36)
@@ -102,8 +115,10 @@ def fill_cells(cells, board, screen):
             textbox = text.get_rect(center=(xpos, ypos))
             screen.blit(text, textbox)
 
+
 def draw_button(left, top, width, height, border, color, border_color, text, screen):
-    pygame.draw.rect(screen,border_color,(left, top, width+border*2, height+border*2))
+    pygame.draw.rect(screen, border_color, (left, top,
+                     width+border*2, height+border*2))
 
     button = pygame.Rect(
         left+border,
@@ -121,12 +136,14 @@ def draw_button(left, top, width, height, border, color, border_color, text, scr
 
     return button
 
+
 def draw_board(active_cell, cells, game, screen):
     draw_grid(screen)
     if active_cell is not None:
         pygame.draw.rect(screen, gray, active_cell)
 
     fill_cells(cells, game, screen)
+
 
 def check_sudoku(sudoku):
     if sudoku.get_empty_cell():
@@ -150,6 +167,7 @@ def check_sudoku(sudoku):
 
     return True
 
+
 def play():
     data = [
         [0, 0, 0, 9, 0, 0, 0, 3, 0],
@@ -161,6 +179,18 @@ def play():
         [4, 1, 0, 0, 0, 2, 0, 7, 8],
         [7, 6, 3, 0, 0, 5, 4, 0, 0],
         [9, 2, 8, 0, 0, 4, 0, 0, 1]
+    ]
+    ### data lvl 2
+    data2 = [
+        [0, 2, 0, 0, 0, 6, 8, 0, 0],
+        [4, 8, 0, 0, 0, 7, 6, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 4, 0],
+        [8, 0, 7, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 8, 6, 4, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 3, 0, 8],
+        [0, 1, 0, 0, 4, 0, 0, 0, 0],
+        [0, 0, 2, 5, 0, 0, 0, 7, 9],
+        [0, 0, 8, 9, 0, 0, 0, 3, 0]
     ]
     # while True:
     #     data = initBoard("easy")
@@ -315,6 +345,7 @@ def play():
 
         pygame.display.flip()
 
+
 def level():
     screen = pygame.display.set_mode((300, height))
     while True:
@@ -345,7 +376,7 @@ def level():
         screen.fill(white)
 
         lvl1_btn = draw_button(
-            300/2 - (button_width+button_border)/2, 
+            300/2 - (button_width+button_border)/2,
             height - (button_height+button_border)*9,
             button_width,
             button_height,
@@ -357,7 +388,7 @@ def level():
         )
         if lvl1_btn.collidepoint(pygame.mouse.get_pos()):
             lvl1_btn = draw_button(
-                300/2 - (button_width+button_border)/2, 
+                300/2 - (button_width+button_border)/2,
                 height - (button_height+button_border)*9,
                 button_width,
                 button_height,
@@ -366,10 +397,10 @@ def level():
                 black,
                 'Level 1',
                 screen
-        )
-            
+            )
+
         lvl2_btn = draw_button(
-            300/2 - (button_width+button_border)/2, 
+            300/2 - (button_width+button_border)/2,
             height - (button_height+button_border)*7,
             button_width,
             button_height,
@@ -381,7 +412,7 @@ def level():
         )
         if lvl2_btn.collidepoint(pygame.mouse.get_pos()):
             lvl2_btn = draw_button(
-                300/2 - (button_width+button_border)/2, 
+                300/2 - (button_width+button_border)/2,
                 height - (button_height+button_border)*7,
                 button_width,
                 button_height,
@@ -390,10 +421,10 @@ def level():
                 black,
                 'Level 2',
                 screen
-        )
-            
+            )
+
         lvl3_btn = draw_button(
-            300/2 - (button_width+button_border)/2, 
+            300/2 - (button_width+button_border)/2,
             height - (button_height+button_border)*5,
             button_width,
             button_height,
@@ -405,7 +436,7 @@ def level():
         )
         if lvl3_btn.collidepoint(pygame.mouse.get_pos()):
             lvl3_btn = draw_button(
-                300/2 - (button_width+button_border)/2, 
+                300/2 - (button_width+button_border)/2,
                 height - (button_height+button_border)*5,
                 button_width,
                 button_height,
@@ -414,10 +445,10 @@ def level():
                 black,
                 'Level 3',
                 screen
-        )
-            
+            )
+
         back_btn = draw_button(
-            300/2 - (button_width+button_border)/2, 
+            300/2 - (button_width+button_border)/2,
             height - (button_height+button_border)*3,
             button_width,
             button_height,
@@ -429,7 +460,7 @@ def level():
         )
         if back_btn.collidepoint(pygame.mouse.get_pos()):
             back_btn = draw_button(
-                300/2 - (button_width+button_border)/2, 
+                300/2 - (button_width+button_border)/2,
                 height - (button_height+button_border)*3,
                 button_width,
                 button_height,
@@ -438,9 +469,10 @@ def level():
                 black,
                 'Back',
                 screen
-        )
+            )
 
         pygame.display.flip()
+
 
 def menu():
     screen = pygame.display.set_mode((300, height))
@@ -460,7 +492,7 @@ def menu():
         screen.fill(white)
 
         play_btn = draw_button(
-            300/2 - (button_width+button_border)/2, 
+            300/2 - (button_width+button_border)/2,
             height/2 - (button_height+button_border)/2,
             button_width,
             button_height,
@@ -472,7 +504,7 @@ def menu():
         )
         if play_btn.collidepoint(pygame.mouse.get_pos()):
             play_btn = draw_button(
-                300/2 - (button_width+button_border)/2, 
+                300/2 - (button_width+button_border)/2,
                 height/2 - (button_height+button_border)/2,
                 button_width,
                 button_height,
@@ -481,7 +513,7 @@ def menu():
                 black,
                 'Play',
                 screen
-        )
+            )
 
         pygame.display.flip()
 
