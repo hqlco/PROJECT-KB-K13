@@ -63,13 +63,37 @@ def create_cells():
     return cells
 
 
+# lvl 1
 def draw_grid(screen):
+    lines_drawn = 0
+    pos = buffer + major_grid_size + cell_size
+
+    while lines_drawn < 6:
+        pygame.draw.line(screen, black, (pos, buffer),
+                         (pos, width-buffer-1), minor_grid_size)
+        pygame.draw.line(screen, black, (buffer, pos),
+                         (width-buffer-1, pos), minor_grid_size)
+
+        lines_drawn += 1
+
+        pos += cell_size + minor_grid_size
+        if lines_drawn % 2 == 0:
+            pos += cell_size + major_grid_size
+
+    for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
+        pygame.draw.line(screen, black, (pos, buffer),
+                         (pos, width-buffer-1), major_grid_size)
+        pygame.draw.line(screen, black, (buffer, pos),
+                         (width-buffer-1, pos), major_grid_size)
+
+# lvl 2
+def draw_grid_lvl2(screen):
     lines_drawn = 0
     pos = buffer + major_grid_size + cell_size
     # draw grid with jigsaw pattern
 
-    pygame.draw.line(screen, black, (pos, buffer),
-                     (pos, width-buffer-1), minor_grid_size)
+    # pygame.draw.line(screen, black, (pos, buffer),
+    #                  (pos, width-buffer-1), minor_grid_size)
     # pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
     while lines_drawn < 6:
         pygame.draw.line(screen, black, (pos, buffer),
@@ -89,6 +113,32 @@ def draw_grid(screen):
         pygame.draw.line(screen, black, (buffer, pos),
                          (width-buffer-1, pos), major_grid_size)
 
+# lvl 3
+def draw_grid_lvl3(screen):
+    lines_drawn = 0
+    pos = buffer + major_grid_size + cell_size
+    # draw grid with jigsaw pattern
+
+    # pygame.draw.line(screen, black, (pos, buffer),
+    #                  (pos, width-buffer-1), minor_grid_size)
+    # pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
+    while lines_drawn < 6:
+        pygame.draw.line(screen, black, (pos, buffer),
+                         (pos, width-buffer-1), minor_grid_size)
+        pygame.draw.line(screen, black, (buffer, pos),
+                         (width-buffer-1, pos), minor_grid_size)
+
+        lines_drawn += 1
+
+        pos += cell_size + minor_grid_size
+        if lines_drawn % 2 == 0:
+            pos += cell_size + major_grid_size
+
+    for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
+        pygame.draw.line(screen, black, (pos, buffer),
+                         (pos, width-buffer-1), major_grid_size)
+        pygame.draw.line(screen, black, (buffer, pos),
+                         (width-buffer-1, pos), major_grid_size)
 
 def fill_cells(cells, board, screen):
     font = pygame.font.Font(None, 36)
