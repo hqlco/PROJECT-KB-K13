@@ -73,6 +73,8 @@ def draw_grid(screen):
                          (pos, width-buffer-1), minor_grid_size)
         pygame.draw.line(screen, black, (buffer, pos),
                          (width-buffer-1, pos), minor_grid_size)
+        # print("pos= ", pos, "buffer= ", buffer, "width= ", width, "cell_size= ", cell_size,
+        #       "minor_grid_size= ", minor_grid_size, "major_grid_size= ", major_grid_size, "\n")
 
         lines_drawn += 1
 
@@ -80,13 +82,117 @@ def draw_grid(screen):
         if lines_drawn % 2 == 0:
             pos += cell_size + major_grid_size
 
+    pygame.draw.line(screen, black, (6, 5),
+                     (6, 472), 3)
+    pygame.draw.line(screen, black, (5, 6),
+                     (472, 6), 3)
+    pygame.draw.line(screen, black, (471, 5),
+                     (471, 472), 3)
+    pygame.draw.line(screen, black, (5, 471),
+                     (472, 471), 3)
+
+    # kel1
+    pygame.draw.line(screen, black, (58, 5),
+                     (58, 472), 3)
+
+    # kel2
+    pygame.draw.line(screen, black, (109, 419),
+                     (472, 419), 3)
+    pygame.draw.line(screen, black, (58, 368),
+                     (109, 368), 3)
+    pygame.draw.line(screen, black, (109, 368),
+                     (109, 419), 3)
+
+    # kel3
+    pygame.draw.line(screen, black, (58, 264),
+                     (161, 264), 3)
+    pygame.draw.line(screen, black, (161, 316),
+                     (264, 316), 3)
+    pygame.draw.line(screen, black, (161, 264),
+                     (161, 316), 3)
+    pygame.draw.line(screen, black, (264, 316),
+                     (264, 419), 3)
+
+    # kel4
+    pygame.draw.line(screen, black, (264, 316),
+                     (368, 316), 3)
+    pygame.draw.line(screen, black, (368, 264),
+                     (419, 264), 3)
+    pygame.draw.line(screen, black, (419, 316),
+                     (471, 316), 3)
+    pygame.draw.line(screen, black, (368, 264),
+                     (368, 316), 3)
+    pygame.draw.line(screen, black, (419, 264),
+                     (419, 316), 3)
+
+    # kel5
+    pygame.draw.line(screen, black, (264, 264),
+                     (316, 264), 3)
+    pygame.draw.line(screen, black, (316, 161),
+                     (471, 161), 3)
+    pygame.draw.line(screen, black, (316, 161),
+                     (316, 264), 3)
+    pygame.draw.line(screen, black, (264, 264),
+                     (264, 316), 3)
+
+    # kel6
+    pygame.draw.line(screen, black, (213, 58),
+                     (368, 58), 3)
+
+    pygame.draw.line(screen, black, (213, 6),
+                     (213, 58), 3)
+    pygame.draw.line(screen, black, (368, 58),
+                     (368, 161), 3)
+
+    # kel7
+    # draw line 58, 109 to 109, 109
+    pygame.draw.line(screen, black, (58, 109),
+                     (109, 109), 3)
+    # draw line 109,109 to 109,161
+    pygame.draw.line(screen, black, (109, 109),
+                     (109, 161), 3)
+    # draw line 109,161 to 161,161
+    pygame.draw.line(screen, black, (109, 161),
+                     (161, 161), 3)
+    # draw line 161,161 to 161,213
+    pygame.draw.line(screen, black, (161, 161),
+                     (161, 213), 3)
+    # draw line 161,213 to 316,213
+    pygame.draw.line(screen, black, (161, 213),
+                     (264, 213), 3)
+    # draw line 316,213 to 316,316
+    pygame.draw.line(screen, black, (264, 213),
+                     (264, 316), 3)
+
+    # kel 8
+    # draw line 161,161 to 213,161
+    pygame.draw.line(screen, black, (161, 161),
+                     (213, 161), 3)
+    # draw line 213,161 to 213,109
+    pygame.draw.line(screen, black, (213, 161),
+                     (213, 109), 3)
+    # draw line 213,109 to 264,109
+    pygame.draw.line(screen, black, (213, 109),
+                     (264, 109), 3)
+    # draw line 264,109 to 264,58
+    pygame.draw.line(screen, black, (264, 109),
+                     (264, 58), 3)
+    # draw line 264,58 to 368,58`
+
     for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
+        # print("pos= ",pos, "buffer= ", buffer, "width= ", width, "cell_size= ", cell_size, "minor_grid_size= ", minor_grid_size, "major_grid_size= ", major_grid_size,"\n")
+        if pos == 6:
+            continue
+        if pos == 471:
+            continue
         pygame.draw.line(screen, black, (pos, buffer),
-                         (pos, width-buffer-1), major_grid_size)
+                         (pos, width-buffer-1), minor_grid_size)
         pygame.draw.line(screen, black, (buffer, pos),
-                         (width-buffer-1, pos), major_grid_size)
+                         (width-buffer-1, pos), minor_grid_size)
 
 # lvl 2
+
+
 def draw_grid_lvl2(screen):
     lines_drawn = 0
     pos = buffer + major_grid_size + cell_size
@@ -114,6 +220,8 @@ def draw_grid_lvl2(screen):
                          (width-buffer-1, pos), major_grid_size)
 
 # lvl 3
+
+
 def draw_grid_lvl3(screen):
     lines_drawn = 0
     pos = buffer + major_grid_size + cell_size
@@ -135,10 +243,12 @@ def draw_grid_lvl3(screen):
             pos += cell_size + major_grid_size
 
     for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
+
         pygame.draw.line(screen, black, (pos, buffer),
                          (pos, width-buffer-1), major_grid_size)
         pygame.draw.line(screen, black, (buffer, pos),
                          (width-buffer-1, pos), major_grid_size)
+
 
 def fill_cells(cells, board, screen):
     font = pygame.font.Font(None, 36)
@@ -243,7 +353,7 @@ def play(lvl):
             [0, 0, 2, 5, 0, 0, 0, 7, 9],
             [0, 0, 8, 9, 0, 0, 0, 3, 0]
         ]
-    elif lvl ==3:
+    elif lvl == 3:
         # TBA
         data = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -257,8 +367,8 @@ def play(lvl):
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
     else:
-        raise Exception("Level Error: Out Of Bound") 
-    
+        raise Exception("Level Error: Out Of Bound")
+
     game = Sudoku(data)
     cells = create_cells()
     active_cell = None
@@ -422,7 +532,7 @@ def play(lvl):
                 black,
                 'Back',
                 screen
-        )
+            )
 
         if not game.get_empty_cell():
             if check_sudoku(game):
