@@ -232,7 +232,6 @@ def play(lvl):
             [9, 2, 8, 0, 0, 4, 0, 0, 1]
         ]
     elif lvl == 2:
-        ### data lvl 2
         data = [
             [0, 2, 0, 0, 0, 6, 8, 0, 0],
             [4, 8, 0, 0, 0, 7, 6, 0, 0],
@@ -244,6 +243,22 @@ def play(lvl):
             [0, 0, 2, 5, 0, 0, 0, 7, 9],
             [0, 0, 8, 9, 0, 0, 0, 3, 0]
         ]
+    elif lvl ==3:
+        # TBA
+        data = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+    else:
+        raise Exception("Level Error: Out Of Bound") 
+    
     game = Sudoku(data)
     cells = create_cells()
     active_cell = None
@@ -266,33 +281,33 @@ def play(lvl):
                 if reset_btn.collidepoint(mouse_pos):
                     game.reset()
 
-                if solve_btn.collidepoint(mouse_pos):
-                    screen.fill(white)
-                    active_cell = None
-                    draw_board(active_cell, cells, game, screen)
-                    reset_btn = draw_button(
-                        width - buffer - button_border*2 - button_width,
-                        height - button_height - button_border*2 - buffer,
-                        button_width,
-                        button_height,
-                        button_border,
-                        inactive_btn,
-                        black,
-                        'Reset',
-                        screen
-                    )
-                    solve_btn = draw_button(
-                        width - buffer*2 - button_border*4 - button_width*2,
-                        height - button_height - button_border*2 - buffer,
-                        button_width,
-                        button_height,
-                        button_border,
-                        inactive_btn,
-                        black,
-                        'Visual Solve',
-                        screen
-                    )
-                    pygame.display.flip()
+                # if solve_btn.collidepoint(mouse_pos):
+                #     screen.fill(white)
+                #     active_cell = None
+                #     draw_board(active_cell, cells, game, screen)
+                #     reset_btn = draw_button(
+                #         width - buffer - button_border*2 - button_width,
+                #         height - button_height - button_border*2 - buffer,
+                #         button_width,
+                #         button_height,
+                #         button_border,
+                #         inactive_btn,
+                #         black,
+                #         'Reset',
+                #         screen
+                #     )
+                #     solve_btn = draw_button(
+                #         width - buffer*2 - button_border*4 - button_width*2,
+                #         height - button_height - button_border*2 - buffer,
+                #         button_width,
+                #         button_height,
+                #         button_border,
+                #         inactive_btn,
+                #         black,
+                #         'Visual Solve',
+                #         screen
+                #     )
+                #     pygame.display.flip()
 
                 if back_btn.collidepoint(mouse_pos):
                     screen.fill(white)
@@ -440,7 +455,7 @@ def level():
                 if lvl3_btn.collidepoint(mouse_pos):
                     screen.fill(white)
                     pygame.display.flip()
-                    play(2)
+                    play(3)
                 if back_btn.collidepoint(mouse_pos):
                     screen.fill(white)
                     pygame.display.flip()
