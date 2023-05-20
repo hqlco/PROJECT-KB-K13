@@ -49,8 +49,10 @@ class Cell:
 
 
 class Sudoku:
-    def __init__(self, board):
+    def __init__(self, board,areaM):
         self.board = []
+        self.area = {}
+        self.area.update(areaM)
         for row in range(9):
             self.board.append([])
             for col in range(9):
@@ -61,6 +63,14 @@ class Sudoku:
                     val = board[row][col]
                     editable = False
                 self.board[row].append(Cell(row, col, val, editable))
+    def printdict(self):
+        for region, coordinates in self.area.items():
+            print(region, ":", coordinates)
+
+    def find_region(self, region_dict, i, j):
+        for v, d in region_dict.items():
+            if (i, j) in d:
+                return v
 
     def check_move(self, cell, num):
         for col in range(9):
@@ -71,15 +81,13 @@ class Sudoku:
             if self.board[row][cell.col].value == num and row != cell.row:
                 return False
 
-        for row in range(cell.row // 3 * 3, cell.row // 3 * 3 + 3):
-            for col in range(cell.col // 3 * 3, cell.col // 3 * 3 + 3):
-                if (
-                    self.board[row][col].value == num
-                    and row != cell.row
-                    and col != cell.col
-                ):
+        regional_point = self.find_region(self.area, cell.row, cell.col)
+        flag = False
+        for i, j in self.area[regional_point]:
+            if self.board[i][j].value == num:
+                if flag:
                     return False
-
+                flag = True
         return True
 
     def get_possible_moves(self, cell):

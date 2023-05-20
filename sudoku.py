@@ -311,7 +311,7 @@ def draw_board(active_cell, cells, game, screen, lvl):
 def dictConv(matrix):
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
-            region = f'region_{matrix[i][j]}'
+            region = matrix[i][j]
             coordinate = (i, j)
             if region in region_dict:
                 region_dict[region].append(coordinate)
@@ -334,20 +334,19 @@ def check_sudoku(sudoku):
 
     row_sets = [set() for _ in range(9)]
     col_sets = [set() for _ in range(9)]
-    box_sets = [set() for _ in range(9)]
+    box_sets = {}
 
     for row in range(9):
         for col in range(9):
             regional_points = region_dict[find_region(row,col)]
-            box = (row // 3) * 3 + col // 3
             value = sudoku.board[row][col].value
 
-            if value in row_sets[row] or value in col_sets[col] or value in regional_points:
+            if value in row_sets[row] or value in col_sets[col] or value in box_sets[regional_points]:
                 return False
 
             row_sets[row].add(value)
             col_sets[col].add(value)
-            box_sets[box].add(value)
+            box_sets[find_region(row,col)].append(value)
 
     return True
 
@@ -416,10 +415,10 @@ def play(lvl):
     else:
         raise Exception("Level Error: Out Of Bound")
 
-
-    game = Sudoku(data)
     dictConv(area)
-    printdict()
+    game = Sudoku(data,region_dict)
+
+    # printdict()
     
     cells = create_cells()
     active_cell = None
