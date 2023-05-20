@@ -24,7 +24,7 @@ green = 0, 175, 0
 red = 200, 0, 0
 inactive_btn = 51, 255, 255
 active_btn = 51, 153, 255
-
+region_dict={}
 # screen = pygame.display.set_mode(size)
 # menuscreen = pygame.display.set_mode(size)
 pygame.display.set_caption('Kelompok 13 - SUDOKU SOLVER')
@@ -308,6 +308,26 @@ def draw_board(active_cell, cells, game, screen, lvl):
     fill_cells(cells, game, screen)
 
 
+def dictConv(matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            region = f'region_{matrix[i][j]}'
+            coordinate = (i, j)
+            if region in region_dict:
+                region_dict[region].append(coordinate)
+            else:
+                region_dict[region] = [coordinate]
+
+def printdict():
+    for region, coordinates in region_dict.items():
+        print(region, ":", coordinates)
+
+def find_region(i, j):
+    for v, d in region_dict.items():
+        if (i, j) in d:
+            return v
+
+
 def check_sudoku(sudoku):
     if sudoku.get_empty_cell():
         raise ValueError('Game is not complete')
@@ -318,10 +338,11 @@ def check_sudoku(sudoku):
 
     for row in range(9):
         for col in range(9):
+            regional_points = region_dict[find_region(row,col)]
             box = (row // 3) * 3 + col // 3
             value = sudoku.board[row][col].value
 
-            if value in row_sets[row] or value in col_sets[col] or value in box_sets[box]:
+            if value in row_sets[row] or value in col_sets[col] or value in regional_points:
                 return False
 
             row_sets[row].add(value)
@@ -329,6 +350,7 @@ def check_sudoku(sudoku):
             box_sets[box].add(value)
 
     return True
+
 
 
 def play(lvl):
@@ -344,6 +366,17 @@ def play(lvl):
             [7, 6, 3, 0, 0, 5, 4, 0, 0],
             [9, 2, 8, 0, 0, 4, 0, 0, 1]
         ]
+        area = [
+            [1,1,1,2,2,2,3,3,3],
+            [1,1,1,2,2,2,3,3,3],
+            [1,1,1,2,2,2,3,3,3],
+            [4,4,4,5,5,5,6,6,6],
+            [4,4,4,5,5,5,6,6,6],
+            [4,4,4,5,5,5,6,6,6],
+            [7,7,7,8,8,8,9,9,9],
+            [7,7,7,8,8,8,9,9,9],
+            [7,7,7,8,8,8,9,9,9]
+        ]
     elif lvl == 2:
         data = [
             [0, 2, 0, 0, 0, 6, 8, 0, 0],
@@ -355,6 +388,17 @@ def play(lvl):
             [0, 1, 0, 0, 4, 0, 0, 0, 0],
             [0, 0, 2, 5, 0, 0, 0, 7, 9],
             [0, 0, 8, 9, 0, 0, 0, 3, 0]
+        ]
+        area = [
+            [1,2,2,2,3,3,3,3,3],
+            [1,2,2,2,2,4,4,3,3],
+            [1,5,2,2,4,4,4,3,3],
+            [1,5,5,4,4,4,6,6,6],
+            [1,5,5,5,5,4,6,6,6],
+            [1,7,7,5,5,6,6,8,6],
+            [1,7,7,7,7,8,8,8,8],
+            [1,9,7,7,7,8,8,8,8],
+            [1,9,9,9,9,9,9,9,9]
         ]
     elif lvl == 3:
         # TBA
@@ -372,7 +416,11 @@ def play(lvl):
     else:
         raise Exception("Level Error: Out Of Bound")
 
+
     game = Sudoku(data)
+    dictConv(area)
+    printdict()
+    
     cells = create_cells()
     active_cell = None
     solve_rect = pygame.Rect(

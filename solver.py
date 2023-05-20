@@ -1,3 +1,5 @@
+# pylint: skip-file
+
 class Cell:
     def __init__(self, row, col, value, editable):
         self.row = row
