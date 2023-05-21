@@ -233,7 +233,7 @@ def dictConv(matrix):
         dict = {}
         for j in range(len(matrix[i])):
             for k in range(len(matrix[i][j])):
-                region = matrix[i][j][k]
+                region = f'region_{matrix[i][j][k]}'
                 coordinate = (j, k)
 
                 if region in dict:
@@ -265,10 +265,11 @@ def check_sudoku(sudoku):
     for p in range(len(region_dict)):
         row_sets = [set() for _ in range(9)]
         col_sets = [set() for _ in range(9)]
-        box_sets = {}
+        box_sets = dict.fromkeys(region_dict[p].keys())
         for row in range(9):
             for col in range(9):
-                regional_points = region_dict[p][find_region(region_dict[p],row, col)]
+                region_key = find_region(region_dict[p], row, col)
+                regional_points = region_dict[p][region_key]
                 value = sudoku.board[p][row][col].value
                 cntRow = 0
                 cntCol = 0
@@ -276,16 +277,19 @@ def check_sudoku(sudoku):
                     cntRow+=1
                 if p > 0 and regional_points == 1 and value in r[p-1][col+6]:
                     cntCol+=1
-                if value in row_sets[row] or value in col_sets[col] or value in box_sets[find_region(region_dict[p],row, col)] or cntRow > 1 or cntCol > 1:
+                if value in row_sets[row] or value in col_sets[col] or cntRow > 1 or cntCol > 1:
                     return False
-
+                box_sets[region_key] = set() if box_sets[region_key] is None else box_sets[region_key]
+                if value in box_sets[region_key]:
+                    return False
                 row_sets[row].add(value)
                 col_sets[col].add(value)
-                box_sets[find_region(region_dict[p],row, col)].add(value)
+                box_sets[region_key].add(value)
         r.append(row_sets)
         c.append(col_sets)
         b.append(box_sets)
     return True
+
 
 
 def play(lvl):
