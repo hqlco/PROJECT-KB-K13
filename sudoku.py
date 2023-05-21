@@ -276,12 +276,12 @@ def check_sudoku(sudoku):
                     cntRow+=1
                 if p > 0 and regional_points == 1 and value in r[p-1][col+6]:
                     cntCol+=1
-                if value in row_sets[row] or value in col_sets[col] or value in box_sets[regional_points] or cntRow > 1 or cntCol > 1:
+                if value in row_sets[row] or value in col_sets[col] or value in box_sets[find_region(region_dict[p],row, col)] or cntRow > 1 or cntCol > 1:
                     return False
 
                 row_sets[row].add(value)
                 col_sets[col].add(value)
-                box_sets[find_region(region_dict[p],row, col)].append(value)
+                box_sets[find_region(region_dict[p],row, col)].add(value)
         r.append(row_sets)
         c.append(col_sets)
         b.append(box_sets)
@@ -486,7 +486,7 @@ def play(lvl):
     dictConv(area)
     game = Sudoku(data, region_dict)
 
-    # printdict()
+    # printdict(region_dict[0])
 
     cells = create_cells()
     active_cell = None
