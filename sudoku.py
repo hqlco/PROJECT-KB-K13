@@ -1,11 +1,12 @@
 # pylint: skip-file
 import pygame
+import random
 import sys
 from solver import Sudoku
 import random
 
 pygame.init()
-
+random_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 cell_size = 50
 minor_grid_size = 1
 major_grid_size = 3
@@ -13,9 +14,9 @@ buffer = 5
 button_height = 50
 button_width = 125
 button_border = 2
-width = cell_size*9 + minor_grid_size*6 + major_grid_size*4 + buffer*2
-height = cell_size*9 + minor_grid_size*6 + \
-    major_grid_size*4 + button_height + buffer*3 + button_border*2
+width = cell_size * 9 + minor_grid_size * 6 + major_grid_size * 4 + buffer * 2
+height = cell_size * 9 + minor_grid_size * 6 + \
+         major_grid_size * 4 + button_height + buffer * 3 + button_border * 2
 size = width, height
 white = 255, 255, 255
 black = 0, 0, 0
@@ -24,7 +25,7 @@ green = 0, 175, 0
 red = 200, 0, 0
 inactive_btn = 51, 255, 255
 active_btn = 51, 153, 255
-region_dict={}
+region_dict = {}
 # screen = pygame.display.set_mode(size)
 # menuscreen = pygame.display.set_mode(size)
 pygame.display.set_caption('Kelompok 13 - SUDOKU SOLVER')
@@ -63,52 +64,12 @@ def create_cells():
 
     return cells
 
+
 # lvl 1
-def draw_grid(screen):
-    lines_drawn = 0
-    pos = buffer + major_grid_size + cell_size
-    # draw grid with jigsaw pattern
 
-    # pygame.draw.line(screen, black, (pos, buffer),
-    #                  (pos, width-buffer-1), minor_grid_size)
-    # pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
-    while lines_drawn < 6:
-        pygame.draw.line(screen, black, (pos, buffer),
-                         (pos, width-buffer-1), minor_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos),
-                         (width-buffer-1, pos), minor_grid_size)
 
-        lines_drawn += 1
-
-        pos += cell_size + minor_grid_size
-        if lines_drawn % 2 == 0:
-            pos += cell_size + major_grid_size
-
-    for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
-        pygame.draw.line(screen, black, (pos, buffer),
-                         (pos, width-buffer-1), major_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos),
-                         (width-buffer-1, pos), major_grid_size)
-
-# lvl 2
-def draw_grid_lvl2(screen):
-    lines_drawn = 0
-    pos = buffer + major_grid_size + cell_size
-
-    while lines_drawn < 6:
-        pygame.draw.line(screen, black, (pos, buffer),
-                         (pos, width-buffer-1), minor_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos),
-                         (width-buffer-1, pos), minor_grid_size)
-        # print("pos= ", pos, "buffer= ", buffer, "width= ", width, "cell_size= ", cell_size,
-        #       "minor_grid_size= ", minor_grid_size, "major_grid_size= ", major_grid_size, "\n")
-
-        lines_drawn += 1
-
-        pos += cell_size + minor_grid_size
-        if lines_drawn % 2 == 0:
-            pos += cell_size + major_grid_size
-
+def draw_grid(screen, area):
+    # draw BG
     pygame.draw.line(screen, black, (6, 5),
                      (6, 472), 3)
     pygame.draw.line(screen, black, (5, 6),
@@ -117,109 +78,64 @@ def draw_grid_lvl2(screen):
                      (471, 472), 3)
     pygame.draw.line(screen, black, (5, 471),
                      (472, 471), 3)
+    jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471]
+    # loop 9 times
+    # sumbu Y
+    for i in range(9):
+        for j in range(8):
+            if area[i][j] == area[i][j + 1]:
+                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+            else:
+                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
+    # sumbu X
+    for i in range(8):
+        for j in range(9):
+            if area[i][j] == area[i + 1][j]:
+                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+            else:
+                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
-    # kel1
-    pygame.draw.line(screen, black, (58, 5),
-                     (58, 472), 3)
 
-    # kel2
-    pygame.draw.line(screen, black, (109, 419),
-                     (472, 419), 3)
-    pygame.draw.line(screen, black, (58, 368),
-                     (109, 368), 3)
-    pygame.draw.line(screen, black, (109, 368),
-                     (109, 419), 3)
+# lvl 2
 
-    # kel3
-    pygame.draw.line(screen, black, (58, 264),
-                     (161, 264), 3)
-    pygame.draw.line(screen, black, (161, 316),
-                     (264, 316), 3)
-    pygame.draw.line(screen, black, (161, 264),
-                     (161, 316), 3)
-    pygame.draw.line(screen, black, (264, 316),
-                     (264, 419), 3)
 
-    # kel4
-    pygame.draw.line(screen, black, (264, 316),
-                     (368, 316), 3)
-    pygame.draw.line(screen, black, (368, 264),
-                     (419, 264), 3)
-    pygame.draw.line(screen, black, (419, 316),
-                     (471, 316), 3)
-    pygame.draw.line(screen, black, (368, 264),
-                     (368, 316), 3)
-    pygame.draw.line(screen, black, (419, 264),
-                     (419, 316), 3)
+def draw_grid_lvl2(screen, area):
+    # draw BG
+    pygame.draw.line(screen, black, (6, 5),
+                     (6, 472), 3)
+    pygame.draw.line(screen, black, (5, 6),
+                     (472, 6), 3)
+    pygame.draw.line(screen, black, (471, 5),
+                     (471, 472), 3)
+    pygame.draw.line(screen, black, (5, 471),
+                     (472, 471), 3)
+    jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471]
+    # loop 9 times
+    # sumbu Y
+    for i in range(9):
+        for j in range(8):
+            if area[i][j] == area[i][j + 1]:
+                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+            else:
+                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
+    # sumbu X
+    for i in range(8):
+        for j in range(9):
+            if area[i][j] == area[i + 1][j]:
+                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+            else:
+                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
-    # kel5
-    pygame.draw.line(screen, black, (264, 264),
-                     (316, 264), 3)
-    pygame.draw.line(screen, black, (316, 161),
-                     (471, 161), 3)
-    pygame.draw.line(screen, black, (316, 161),
-                     (316, 264), 3)
-    pygame.draw.line(screen, black, (264, 264),
-                     (264, 316), 3)
-
-    # kel6
-    pygame.draw.line(screen, black, (213, 58),
-                     (368, 58), 3)
-
-    pygame.draw.line(screen, black, (213, 6),
-                     (213, 58), 3)
-    pygame.draw.line(screen, black, (368, 58),
-                     (368, 161), 3)
-
-    # kel7
-    # draw line 58, 109 to 109, 109
-    pygame.draw.line(screen, black, (58, 109),
-                     (109, 109), 3)
-    # draw line 109,109 to 109,161
-    pygame.draw.line(screen, black, (109, 109),
-                     (109, 161), 3)
-    # draw line 109,161 to 161,161
-    pygame.draw.line(screen, black, (109, 161),
-                     (161, 161), 3)
-    # draw line 161,161 to 161,213
-    pygame.draw.line(screen, black, (161, 161),
-                     (161, 213), 3)
-    # draw line 161,213 to 316,213
-    pygame.draw.line(screen, black, (161, 213),
-                     (264, 213), 3)
-    # draw line 316,213 to 316,316
-    pygame.draw.line(screen, black, (264, 213),
-                     (264, 316), 3)
-
-    # kel 8
-    # draw line 161,161 to 213,161
-    pygame.draw.line(screen, black, (161, 161),
-                     (213, 161), 3)
-    # draw line 213,161 to 213,109
-    pygame.draw.line(screen, black, (213, 161),
-                     (213, 109), 3)
-    # draw line 213,109 to 264,109
-    pygame.draw.line(screen, black, (213, 109),
-                     (264, 109), 3)
-    # draw line 264,109 to 264,58
-    pygame.draw.line(screen, black, (264, 109),
-                     (264, 58), 3)
-    # draw line 264,58 to 368,58`
-
-    for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
-        # print("pos= ",pos, "buffer= ", buffer, "width= ", width, "cell_size= ", cell_size, "minor_grid_size= ", minor_grid_size, "major_grid_size= ", major_grid_size,"\n")
-        if pos == 6:
-            continue
-        if pos == 471:
-            continue
-        pygame.draw.line(screen, black, (pos, buffer),
-                         (pos, width-buffer-1), minor_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos),
-                         (width-buffer-1, pos), minor_grid_size)
 
 # lvl 3
-
-
 def draw_grid_lvl3(screen):
     lines_drawn = 0
     pos = buffer + major_grid_size + cell_size
@@ -230,9 +146,9 @@ def draw_grid_lvl3(screen):
     # pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
     while lines_drawn < 6:
         pygame.draw.line(screen, black, (pos, buffer),
-                         (pos, width-buffer-1), minor_grid_size)
+                         (pos, width - buffer - 1), minor_grid_size)
         pygame.draw.line(screen, black, (buffer, pos),
-                         (width-buffer-1, pos), minor_grid_size)
+                         (width - buffer - 1, pos), minor_grid_size)
 
         lines_drawn += 1
 
@@ -240,12 +156,11 @@ def draw_grid_lvl3(screen):
         if lines_drawn % 2 == 0:
             pos += cell_size + major_grid_size
 
-    for pos in range(buffer+major_grid_size//2, width, cell_size*3 + minor_grid_size*2 + major_grid_size):
-
+    for pos in range(buffer + major_grid_size // 2, width, cell_size * 3 + minor_grid_size * 2 + major_grid_size):
         pygame.draw.line(screen, black, (pos, buffer),
-                         (pos, width-buffer-1), major_grid_size)
+                         (pos, width - buffer - 1), major_grid_size)
         pygame.draw.line(screen, black, (buffer, pos),
-                         (width-buffer-1, pos), major_grid_size)
+                         (width - buffer - 1, pos), major_grid_size)
 
 
 def fill_cells(cells, board, screen):
@@ -276,11 +191,11 @@ def fill_cells(cells, board, screen):
 
 def draw_button(left, top, width, height, border, color, border_color, text, screen):
     pygame.draw.rect(screen, border_color, (left, top,
-                     width+border*2, height+border*2))
+                                            width + border * 2, height + border * 2))
 
     button = pygame.Rect(
-        left+border,
-        top+border,
+        left + border,
+        top + border,
         width,
         height
     )
@@ -295,12 +210,12 @@ def draw_button(left, top, width, height, border, color, border_color, text, scr
     return button
 
 
-def draw_board(active_cell, cells, game, screen, lvl):
-    if(lvl == 1):
-        draw_grid(screen)
-    elif(lvl ==2):
-        draw_grid_lvl2(screen)
-    elif(lvl ==3):
+def draw_board(active_cell, cells, game, screen, lvl, area):
+    if (lvl == 1):
+        draw_grid(screen, area)
+    elif (lvl == 2):
+        draw_grid_lvl2(screen, area)
+    elif (lvl == 3):
         draw_grid_lvl3(screen)
     if active_cell is not None:
         pygame.draw.rect(screen, gray, active_cell)
@@ -318,9 +233,11 @@ def dictConv(matrix):
             else:
                 region_dict[region] = [coordinate]
 
+
 def printdict():
     for region, coordinates in region_dict.items():
         print(region, ":", coordinates)
+
 
 def find_region(i, j):
     for v, d in region_dict.items():
@@ -338,7 +255,7 @@ def check_sudoku(sudoku):
 
     for row in range(9):
         for col in range(9):
-            regional_points = region_dict[find_region(row,col)]
+            regional_points = region_dict[find_region(row, col)]
             value = sudoku.board[row][col].value
 
             if value in row_sets[row] or value in col_sets[col] or value in box_sets[regional_points]:
@@ -346,16 +263,15 @@ def check_sudoku(sudoku):
 
             row_sets[row].add(value)
             col_sets[col].add(value)
-            box_sets[find_region(row,col)].append(value)
+            box_sets[find_region(row, col)].append(value)
 
     return True
 
 
-
 def play(lvl):
     if lvl == 1:
-        data = [
-            [
+        if random.choice(random_list) % 3 == 0:
+            data = [
                 [0, 0, 0, 9, 0, 0, 0, 3, 0],
                 [3, 0, 6, 0, 2, 0, 0, 4, 0],
                 [2, 0, 4, 0, 0, 3, 1, 0, 6],
@@ -366,88 +282,175 @@ def play(lvl):
                 [7, 6, 3, 0, 0, 5, 4, 0, 0],
                 [9, 2, 8, 0, 0, 4, 0, 0, 1]
             ]
-        ]
-        area = [
-            [
-            [1,1,1,2,2,2,3,3,3],
-            [1,1,1,2,2,2,3,3,3],
-            [1,1,1,2,2,2,3,3,3],
-            [4,4,4,5,5,5,6,6,6],
-            [4,4,4,5,5,5,6,6,6],
-            [4,4,4,5,5,5,6,6,6],
-            [7,7,7,8,8,8,9,9,9],
-            [7,7,7,8,8,8,9,9,9],
-            [7,7,7,8,8,8,9,9,9]
+            area = [
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9]
             ]
-        ]
+        elif random.choice(random_list) % 3 == 1:
+            data = [
+                [0, 0, 0, 9, 0, 0, 0, 3, 0],
+                [3, 0, 6, 0, 2, 0, 0, 4, 0],
+                [2, 0, 4, 0, 0, 3, 1, 0, 6],
+                [0, 7, 0, 0, 5, 1, 0, 8, 0],
+                [0, 3, 1, 0, 6, 0, 0, 5, 7],
+                [5, 0, 9, 0, 0, 0, 6, 0, 0],
+                [4, 1, 0, 0, 0, 2, 0, 7, 8],
+                [7, 6, 3, 0, 0, 5, 4, 0, 0],
+                [9, 2, 8, 0, 0, 4, 0, 0, 1]
+            ]
+            area = [
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+            ]
+        else:
+            data = [
+                [0, 0, 0, 9, 0, 0, 0, 3, 0],
+                [3, 0, 6, 0, 2, 0, 0, 4, 0],
+                [2, 0, 4, 0, 0, 3, 1, 0, 6],
+                [0, 7, 0, 0, 5, 1, 0, 8, 0],
+                [0, 3, 1, 0, 6, 0, 0, 5, 7],
+                [5, 0, 9, 0, 0, 0, 6, 0, 0],
+                [4, 1, 0, 0, 0, 2, 0, 7, 8],
+                [7, 6, 3, 0, 0, 5, 4, 0, 0],
+                [9, 2, 8, 0, 0, 4, 0, 0, 1]
+            ]
+            area = [
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+            ]
     elif lvl == 2:
-        data = [
-            [
-            [0, 2, 0, 0, 0, 6, 8, 0, 0],
-            [4, 8, 0, 0, 0, 7, 6, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 4, 0],
-            [8, 0, 7, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 8, 6, 4, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 3, 0, 8],
-            [0, 1, 0, 0, 4, 0, 0, 0, 0],
-            [0, 0, 2, 5, 0, 0, 0, 7, 9],
-            [0, 0, 8, 9, 0, 0, 0, 3, 0]
+        if random.choice(random_list) % 3 == 0:
+            data = [
+                [0, 2, 0, 0, 0, 6, 8, 0, 0],
+                [4, 8, 0, 0, 0, 7, 6, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 4, 0],
+                [8, 0, 7, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 8, 6, 4, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 3, 0, 8],
+                [0, 1, 0, 0, 4, 0, 0, 0, 0],
+                [0, 0, 2, 5, 0, 0, 0, 7, 9],
+                [0, 0, 8, 9, 0, 0, 0, 3, 0]
             ]
-        ]
-        area = [
-            [
-            [1,2,2,2,3,3,3,3,3],
-            [1,2,2,2,2,4,4,3,3],
-            [1,5,2,2,4,4,4,3,3],
-            [1,5,5,4,4,4,6,6,6],
-            [1,5,5,5,5,4,6,6,6],
-            [1,7,7,5,5,6,6,8,6],
-            [1,7,7,7,7,8,8,8,8],
-            [1,9,7,7,7,8,8,8,8],
-            [1,9,9,9,9,9,9,9,9]
+            area = [
+                [1, 2, 2, 2, 3, 3, 3, 3, 3],
+                [1, 2, 2, 2, 2, 4, 4, 3, 3],
+                [1, 5, 2, 2, 4, 4, 4, 3, 3],
+                [1, 5, 5, 4, 4, 4, 6, 6, 6],
+                [1, 5, 5, 5, 5, 4, 6, 6, 6],
+                [1, 7, 7, 5, 5, 6, 6, 8, 6],
+                [1, 7, 7, 7, 7, 8, 8, 8, 8],
+                [1, 9, 7, 7, 7, 8, 8, 8, 8],
+                [1, 9, 9, 9, 9, 9, 9, 9, 9]
             ]
-        ]
+        elif random.choice(random_list) % 3 == 1:
+            data = [
+                [0, 2, 0, 0, 0, 6, 8, 0, 0],
+                [4, 8, 0, 0, 0, 7, 6, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 4, 0],
+                [8, 0, 7, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 8, 6, 4, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 3, 0, 8],
+                [0, 1, 0, 0, 4, 0, 0, 0, 0],
+                [0, 0, 2, 5, 0, 0, 0, 7, 9],
+                [0, 0, 8, 9, 0, 0, 0, 3, 0]
+            ]
+            area = [
+                [1, 2, 2, 2, 3, 3, 3, 3, 3],
+                [1, 2, 2, 2, 2, 4, 4, 3, 3],
+                [1, 5, 2, 2, 4, 4, 4, 3, 3],
+                [1, 5, 5, 4, 4, 4, 6, 6, 6],
+                [1, 5, 5, 5, 5, 4, 6, 6, 6],
+                [1, 7, 7, 5, 5, 6, 6, 8, 6],
+                [1, 7, 7, 7, 7, 8, 8, 8, 8],
+                [1, 9, 7, 7, 7, 8, 8, 8, 8],
+                [1, 9, 9, 9, 9, 9, 9, 9, 9]
+            ]
+        else:
+            data = [
+                [0, 2, 0, 0, 0, 6, 8, 0, 0],
+                [4, 8, 0, 0, 0, 7, 6, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 4, 0],
+                [8, 0, 7, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 8, 6, 4, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 3, 0, 8],
+                [0, 1, 0, 0, 4, 0, 0, 0, 0],
+                [0, 0, 2, 5, 0, 0, 0, 7, 9],
+                [0, 0, 8, 9, 0, 0, 0, 3, 0]
+            ]
+            area = [
+                [1, 2, 2, 2, 3, 3, 3, 3, 3],
+                [1, 2, 2, 2, 2, 4, 4, 3, 3],
+                [1, 5, 2, 2, 4, 4, 4, 3, 3],
+                [1, 5, 5, 4, 4, 4, 6, 6, 6],
+                [1, 5, 5, 5, 5, 4, 6, 6, 6],
+                [1, 7, 7, 5, 5, 6, 6, 8, 6],
+                [1, 7, 7, 7, 7, 8, 8, 8, 8],
+                [1, 9, 7, 7, 7, 8, 8, 8, 8],
+                [1, 9, 9, 9, 9, 9, 9, 9, 9]
+            ]
+
     elif lvl == 3:
         # TBA
         data = [
             [
-            [6, 0, 3, 7, 0, 5, 9, 0, 8],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [4, 0, 5, 8, 0, 6, 7, 0, 2],
-            [7, 0, 2, 1, 0, 8, 4, 0, 6],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 4, 3, 0, 7, 2, 0, 9],
-            [2, 0, 7, 6, 0, 1, 8, 0, 3],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [3, 0, 8, 5, 0, 9, 6, 0, 1]
+                [6, 0, 3, 7, 0, 5, 9, 0, 8],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [4, 0, 5, 8, 0, 6, 7, 0, 2],
+                [7, 0, 2, 1, 0, 8, 4, 0, 6],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [1, 0, 4, 3, 0, 7, 2, 0, 9],
+                [2, 0, 7, 6, 0, 1, 8, 0, 3],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [3, 0, 8, 5, 0, 9, 6, 0, 1]
             ],
             [
-            [8, 0, 3, 5, 0, 4, 2, 0, 7],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [6, 0, 1, 9, 0, 7, 3, 0, 5],
-            [1, 0, 6, 8, 0, 5, 7, 0, 3],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [7, 0, 9, 3, 0, 1, 5, 0, 6],
-            [3, 0, 2, 1, 0, 8, 6, 0, 4],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [9, 0, 7, 4, 0, 2, 8, 0, 1]
+                [8, 0, 3, 5, 0, 4, 2, 0, 7],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [6, 0, 1, 9, 0, 7, 3, 0, 5],
+                [1, 0, 6, 8, 0, 5, 7, 0, 3],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [7, 0, 9, 3, 0, 1, 5, 0, 6],
+                [3, 0, 2, 1, 0, 8, 6, 0, 4],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [9, 0, 7, 4, 0, 2, 8, 0, 1]
             ]
         ]
     else:
         raise Exception("Level Error: Out Of Bound")
 
     dictConv(area)
-    game = Sudoku(data,region_dict)
+    game = Sudoku(data, region_dict)
 
     # printdict()
-    
+
     cells = create_cells()
     active_cell = None
     solve_rect = pygame.Rect(
         buffer,
-        height-button_height - button_border*2 - buffer,
-        button_width + button_border*2,
-        button_height + button_border*2
+        height - button_height - button_border * 2 - buffer,
+        button_width + button_border * 2,
+        button_height + button_border * 2
     )
     screen = pygame.display.set_mode(size)
 
@@ -531,11 +534,11 @@ def play(lvl):
 
         screen.fill(white)
 
-        draw_board(active_cell, cells, game, screen,lvl)
+        draw_board(active_cell, cells, game, screen, lvl, area)
 
         reset_btn = draw_button(
-            width - buffer - button_border*2 - button_width,
-            height - button_height - button_border*2 - buffer,
+            width - buffer - button_border * 2 - button_width,
+            height - button_height - button_border * 2 - buffer,
             button_width,
             button_height,
             button_border,
@@ -545,8 +548,8 @@ def play(lvl):
             screen
         )
         solve_btn = draw_button(
-            width - buffer*2 - button_border*4 - button_width*2,
-            height - button_height - button_border*2 - buffer,
+            width - buffer * 2 - button_border * 4 - button_width * 2,
+            height - button_height - button_border * 2 - buffer,
             button_width,
             button_height,
             button_border,
@@ -558,8 +561,8 @@ def play(lvl):
 
         if reset_btn.collidepoint(pygame.mouse.get_pos()):
             reset_btn = draw_button(
-                width - buffer - button_border*2 - button_width,
-                height - button_height - button_border*2 - buffer,
+                width - buffer - button_border * 2 - button_width,
+                height - button_height - button_border * 2 - buffer,
                 button_width,
                 button_height,
                 button_border,
@@ -570,8 +573,8 @@ def play(lvl):
             )
         if solve_btn.collidepoint(pygame.mouse.get_pos()):
             solve_btn = draw_button(
-                width - buffer*2 - button_border*4 - button_width*2,
-                height - button_height - button_border*2 - buffer,
+                width - buffer * 2 - button_border * 4 - button_width * 2,
+                height - button_height - button_border * 2 - buffer,
                 button_width,
                 button_height,
                 button_border,
@@ -582,8 +585,8 @@ def play(lvl):
             )
 
         back_btn = draw_button(
-            width - buffer*3 - button_border*6 - button_width*3,
-            height - button_height - button_border*2 - buffer,
+            width - buffer * 3 - button_border * 6 - button_width * 3,
+            height - button_height - button_border * 2 - buffer,
             button_width,
             button_height,
             button_border,
@@ -594,8 +597,8 @@ def play(lvl):
         )
         if back_btn.collidepoint(pygame.mouse.get_pos()):
             back_btn = draw_button(
-                width - buffer*3 - button_border*6 - button_width*3,
-                height - button_height - button_border*2 - buffer,
+                width - buffer * 3 - button_border * 6 - button_width * 3,
+                height - button_height - button_border * 2 - buffer,
                 button_width,
                 button_height,
                 button_border,
@@ -645,8 +648,8 @@ def level():
         screen.fill(white)
 
         lvl1_btn = draw_button(
-            300/2 - (button_width+button_border)/2,
-            height - (button_height+button_border)*9,
+            300 / 2 - (button_width + button_border) / 2,
+            height - (button_height + button_border) * 9,
             button_width,
             button_height,
             button_border,
@@ -657,8 +660,8 @@ def level():
         )
         if lvl1_btn.collidepoint(pygame.mouse.get_pos()):
             lvl1_btn = draw_button(
-                300/2 - (button_width+button_border)/2,
-                height - (button_height+button_border)*9,
+                300 / 2 - (button_width + button_border) / 2,
+                height - (button_height + button_border) * 9,
                 button_width,
                 button_height,
                 button_border,
@@ -669,8 +672,8 @@ def level():
             )
 
         lvl2_btn = draw_button(
-            300/2 - (button_width+button_border)/2,
-            height - (button_height+button_border)*7,
+            300 / 2 - (button_width + button_border) / 2,
+            height - (button_height + button_border) * 7,
             button_width,
             button_height,
             button_border,
@@ -681,8 +684,8 @@ def level():
         )
         if lvl2_btn.collidepoint(pygame.mouse.get_pos()):
             lvl2_btn = draw_button(
-                300/2 - (button_width+button_border)/2,
-                height - (button_height+button_border)*7,
+                300 / 2 - (button_width + button_border) / 2,
+                height - (button_height + button_border) * 7,
                 button_width,
                 button_height,
                 button_border,
@@ -693,8 +696,8 @@ def level():
             )
 
         lvl3_btn = draw_button(
-            300/2 - (button_width+button_border)/2,
-            height - (button_height+button_border)*5,
+            300 / 2 - (button_width + button_border) / 2,
+            height - (button_height + button_border) * 5,
             button_width,
             button_height,
             button_border,
@@ -705,8 +708,8 @@ def level():
         )
         if lvl3_btn.collidepoint(pygame.mouse.get_pos()):
             lvl3_btn = draw_button(
-                300/2 - (button_width+button_border)/2,
-                height - (button_height+button_border)*5,
+                300 / 2 - (button_width + button_border) / 2,
+                height - (button_height + button_border) * 5,
                 button_width,
                 button_height,
                 button_border,
@@ -717,8 +720,8 @@ def level():
             )
 
         back_btn = draw_button(
-            300/2 - (button_width+button_border)/2,
-            height - (button_height+button_border)*3,
+            300 / 2 - (button_width + button_border) / 2,
+            height - (button_height + button_border) * 3,
             button_width,
             button_height,
             button_border,
@@ -729,8 +732,8 @@ def level():
         )
         if back_btn.collidepoint(pygame.mouse.get_pos()):
             back_btn = draw_button(
-                300/2 - (button_width+button_border)/2,
-                height - (button_height+button_border)*3,
+                300 / 2 - (button_width + button_border) / 2,
+                height - (button_height + button_border) * 3,
                 button_width,
                 button_height,
                 button_border,
@@ -761,8 +764,8 @@ def menu():
         screen.fill(white)
 
         play_btn = draw_button(
-            300/2 - (button_width+button_border)/2,
-            height/2 - (button_height+button_border)/2,
+            300 / 2 - (button_width + button_border) / 2,
+            height / 2 - (button_height + button_border) / 2,
             button_width,
             button_height,
             button_border,
@@ -773,8 +776,8 @@ def menu():
         )
         if play_btn.collidepoint(pygame.mouse.get_pos()):
             play_btn = draw_button(
-                300/2 - (button_width+button_border)/2,
-                height/2 - (button_height+button_border)/2,
+                300 / 2 - (button_width + button_border) / 2,
+                height / 2 - (button_height + button_border) / 2,
                 button_width,
                 button_height,
                 button_border,
