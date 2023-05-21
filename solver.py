@@ -85,7 +85,7 @@ class Sudoku:
         regional_point = self.find_region(self.area[cell.papan], cell.row, cell.col)
 
         # kasus apabila papan pertama area 9 diisi
-        if cell.papan ==0 and regional_point == 9 and len(cell)==2:
+        if cell.papan ==0 and regional_point == 9 and len(self.area)==2:
             for col in range(9):
                 if self.board[2][cell.row - 6][col].value == num and col != cell.col - 6 :
                     return False
@@ -94,7 +94,7 @@ class Sudoku:
                     return False
         # kasus apabila papan kedua area 1 diisi
         # boleh pilih salah satu karena intesect
-        elif cell.papan ==1 and regional_point == 1 and len(cell)==2:
+        elif cell.papan ==1 and regional_point == 1 and len(self.area)==2:
             for col in range(9):
                 if self.board[1][cell.row + 6][col].value == num and col != cell.col + 6 :
                     return False
@@ -103,11 +103,11 @@ class Sudoku:
                     return False
 
         flag = False
-        # for i, j in self.area[cell.papan][regional_point]:
-        #     if self.board[cell.papan][i][j].value == num:
-        #         if flag:
-        #             return False
-        #         flag = True
+        for i, j in self.area[cell.papan][regional_point]:
+            if self.board[cell.papan][i][j].value == num:
+                if flag:
+                    return False
+                flag = True
         return True
 
     def get_possible_moves(self, cell):
@@ -122,7 +122,7 @@ class Sudoku:
                 possible_moves.remove(self.board[row][cell.col].value)
         # kasus apabila papan pertama area 9 diisi
         regional_point = self.find_region(self.area[cell.papan], cell.row, cell.col)
-        if cell.papan == 0 and regional_point == 9 and len(cell)==2:
+        if cell.papan == 0 and regional_point == 9 and len(self.area)==2:
             for col in range(9):
                 if self.board[1][cell.row-6][col].value in possible_moves:
                     possible_moves.remove(self.board[2][cell.row-6][col].value)
@@ -131,7 +131,7 @@ class Sudoku:
                     possible_moves.remove(self.board[2][row][cell.col -6].value)
         # kasus apabila papan kedua area 1 diisi
         # boleh pilih salah satu karena intesect
-        elif cell.papan == 1 and regional_point == 1 and len(cell)==2:
+        elif cell.papan == 1 and regional_point == 1 and len(self.area)==2:
             for col in range(9):
                 if self.board[0][cell.row+6][col].value in possible_moves:
                     possible_moves.remove(self.board[2][cell.row+6][col].value)
