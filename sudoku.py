@@ -25,7 +25,7 @@ green = 0, 175, 0
 red = 200, 0, 0
 inactive_btn = 51, 255, 255
 active_btn = 51, 153, 255
-region_dict = {}
+region_dict = []
 # screen = pygame.display.set_mode(size)
 # menuscreen = pygame.display.set_mode(size)
 pygame.display.set_caption('Kelompok 13 - SUDOKU SOLVER')
@@ -81,23 +81,25 @@ def draw_grid(screen, area):
     jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471]
     # loop 9 times
     # sumbu Y
-    for i in range(9):
-        for j in range(8):
-            if area[i][j] == area[i][j + 1]:
-                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
-                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
-            else:
-                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
-                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
+    for p in range(len(area)):
+        for i in range(9):
+            for j in range(8):
+                if area[p][i][j] == area[p][i][j + 1]:
+                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                else:
+                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
     # sumbu X
-    for i in range(8):
-        for j in range(9):
-            if area[i][j] == area[i + 1][j]:
-                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
-                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
-            else:
-                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
-                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
+    for p in range(len(area)):
+        for i in range(8):
+            for j in range(9):
+                if area[p][i][j] == area[p][i + 1][j]:
+                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                else:
+                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
 
 # lvl 2
@@ -116,23 +118,25 @@ def draw_grid_lvl2(screen, area):
     jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471]
     # loop 9 times
     # sumbu Y
-    for i in range(9):
-        for j in range(8):
-            if area[i][j] == area[i][j + 1]:
-                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
-                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
-            else:
-                pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
-                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
+    for p in range(len(area)):
+        for i in range(9):
+            for j in range(8):
+                if area[p][i][j] == area[p][i][j + 1]:
+                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                else:
+                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
     # sumbu X
-    for i in range(8):
-        for j in range(9):
-            if area[i][j] == area[i + 1][j]:
-                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
-                                 (jarak[j + 1], jarak[i + 1]), minor_grid_size)
-            else:
-                pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
-                                 (jarak[j + 1], jarak[i + 1]), major_grid_size)
+    for p in range(len(area)):
+        for i in range(8):
+            for j in range(9):
+                if area[p][i][j] == area[p][i + 1][j]:
+                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                else:
+                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
 
 # lvl 3
@@ -166,27 +170,28 @@ def draw_grid_lvl3(screen):
 def fill_cells(cells, board, screen):
     font = pygame.font.Font(None, 36)
 
-    for row in range(9):
-        for col in range(9):
-            if board.board[row][col].value is None:
-                continue
+    for p in range(len(board.board)):
+        for row in range(9):
+            for col in range(9):
+                if board.board[p][row][col].value is None:
+                    continue
 
-            if not board.board[row][col].editable:
-                font.bold = True
-                text = font.render(f'{board.board[row][col].value}', 1, black)
+                if not board.board[p][row][col].editable:
+                    font.bold = True
+                    text = font.render(f'{board.board[p][row][col].value}', 1, black)
 
-            else:
-                font.bold = False
-                if board.check_move(board.board[row][col], board.board[row][col].value):
-                    text = font.render(
-                        f'{board.board[row][col].value}', 1, green)
                 else:
-                    text = font.render(
-                        f'{board.board[row][col].value}', 1, red)
+                    font.bold = False
+                    if board.check_move(board.board[p][row][col], board.board[p][row][col].value):
+                        text = font.render(
+                            f'{board.board[p][row][col].value}', 1, green)
+                    else:
+                        text = font.render(
+                            f'{board.board[p][row][col].value}', 1, red)
 
-            xpos, ypos = cells[row][col].center
-            textbox = text.get_rect(center=(xpos, ypos))
-            screen.blit(text, textbox)
+                xpos, ypos = cells[row][col].center
+                textbox = text.get_rect(center=(xpos, ypos))
+                screen.blit(text, textbox)
 
 
 def draw_button(left, top, width, height, border, color, border_color, text, screen):
@@ -225,22 +230,26 @@ def draw_board(active_cell, cells, game, screen, lvl, area):
 
 def dictConv(matrix):
     for i in range(len(matrix)):
+        dict = {}
         for j in range(len(matrix[i])):
-            region = matrix[i][j]
-            coordinate = (i, j)
-            if region in region_dict:
-                region_dict[region].append(coordinate)
-            else:
-                region_dict[region] = [coordinate]
+            for k in range(len(matrix[i][j])):
+                region = matrix[i][j][k]
+                coordinate = (j, k)
+
+                if region in dict:
+                    dict[region].append(coordinate)
+                else:
+                    dict[region] = [coordinate]
+        region_dict.append(dict)
 
 
-def printdict():
-    for region, coordinates in region_dict.items():
+def printdict(dict):
+    for region, coordinates in dict.items():
         print(region, ":", coordinates)
 
 
-def find_region(i, j):
-    for v, d in region_dict.items():
+def find_region(dict,i, j):
+    for v, d in dict.items():
         if (i, j) in d:
             return v
 
@@ -249,22 +258,33 @@ def check_sudoku(sudoku):
     if sudoku.get_empty_cell():
         raise ValueError('Game is not complete')
 
-    row_sets = [set() for _ in range(9)]
-    col_sets = [set() for _ in range(9)]
-    box_sets = {}
+    r = []
+    c = []
+    b = []
+    
+    for p in range(len(region_dict)):
+        row_sets = [set() for _ in range(9)]
+        col_sets = [set() for _ in range(9)]
+        box_sets = {}
+        for row in range(9):
+            for col in range(9):
+                regional_points = region_dict[p][find_region(region_dict[p],row, col)]
+                value = sudoku.board[p][row][col].value
+                cntRow = 0
+                cntCol = 0
+                if p > 0 and regional_points == 1 and value in r[p-1][row+6]:
+                    cntRow+=1
+                if p > 0 and regional_points == 1 and value in r[p-1][col+6]:
+                    cntCol+=1
+                if value in row_sets[row] or value in col_sets[col] or value in box_sets[regional_points] or cntRow > 1 or cntCol > 1:
+                    return False
 
-    for row in range(9):
-        for col in range(9):
-            regional_points = region_dict[find_region(row, col)]
-            value = sudoku.board[row][col].value
-
-            if value in row_sets[row] or value in col_sets[col] or value in box_sets[regional_points]:
-                return False
-
-            row_sets[row].add(value)
-            col_sets[col].add(value)
-            box_sets[find_region(row, col)].append(value)
-
+                row_sets[row].add(value)
+                col_sets[col].add(value)
+                box_sets[find_region(region_dict[p],row, col)].append(value)
+        r.append(row_sets)
+        c.append(col_sets)
+        b.append(box_sets)
     return True
 
 
@@ -272,6 +292,7 @@ def play(lvl):
     if lvl == 1:
         if random.choice(random_list) % 3 == 0:
             data = [
+                [
                 [0, 0, 0, 9, 0, 0, 0, 3, 0],
                 [3, 0, 6, 0, 2, 0, 0, 4, 0],
                 [2, 0, 4, 0, 0, 3, 1, 0, 6],
@@ -281,8 +302,10 @@ def play(lvl):
                 [4, 1, 0, 0, 0, 2, 0, 7, 8],
                 [7, 6, 3, 0, 0, 5, 4, 0, 0],
                 [9, 2, 8, 0, 0, 4, 0, 0, 1]
+                ]
             ]
             area = [
+                [
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
@@ -292,9 +315,11 @@ def play(lvl):
                 [7, 7, 7, 8, 8, 8, 9, 9, 9],
                 [7, 7, 7, 8, 8, 8, 9, 9, 9],
                 [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                ]
             ]
         elif random.choice(random_list) % 3 == 1:
             data = [
+                [
                 [0, 0, 0, 9, 0, 0, 0, 3, 0],
                 [3, 0, 6, 0, 2, 0, 0, 4, 0],
                 [2, 0, 4, 0, 0, 3, 1, 0, 6],
@@ -304,8 +329,10 @@ def play(lvl):
                 [4, 1, 0, 0, 0, 2, 0, 7, 8],
                 [7, 6, 3, 0, 0, 5, 4, 0, 0],
                 [9, 2, 8, 0, 0, 4, 0, 0, 1]
+                ]
             ]
             area = [
+                [
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
@@ -315,20 +342,11 @@ def play(lvl):
                 [7, 7, 7, 8, 8, 8, 9, 9, 9],
                 [7, 7, 7, 8, 8, 8, 9, 9, 9],
                 [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                ]
             ]
         else:
             data = [
-                [0, 0, 0, 9, 0, 0, 0, 3, 0],
-                [3, 0, 6, 0, 2, 0, 0, 4, 0],
-                [2, 0, 4, 0, 0, 3, 1, 0, 6],
-                [0, 7, 0, 0, 5, 1, 0, 8, 0],
-                [0, 3, 1, 0, 6, 0, 0, 5, 7],
-                [5, 0, 9, 0, 0, 0, 6, 0, 0],
-                [4, 1, 0, 0, 0, 2, 0, 7, 8],
-                [7, 6, 3, 0, 0, 5, 4, 0, 0],
-                [9, 2, 8, 0, 0, 4, 0, 0, 1]
-            ]
-            area = [
+                [
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
                 [1, 1, 1, 2, 2, 2, 3, 3, 3],
@@ -338,10 +356,25 @@ def play(lvl):
                 [7, 7, 7, 8, 8, 8, 9, 9, 9],
                 [7, 7, 7, 8, 8, 8, 9, 9, 9],
                 [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                ]
+            ]
+            area = [
+                [
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                ]
             ]
     elif lvl == 2:
         if random.choice(random_list) % 3 == 0:
             data = [
+                [
                 [0, 2, 0, 0, 0, 6, 8, 0, 0],
                 [4, 8, 0, 0, 0, 7, 6, 0, 0],
                 [0, 0, 0, 0, 1, 0, 0, 4, 0],
@@ -351,8 +384,10 @@ def play(lvl):
                 [0, 1, 0, 0, 4, 0, 0, 0, 0],
                 [0, 0, 2, 5, 0, 0, 0, 7, 9],
                 [0, 0, 8, 9, 0, 0, 0, 3, 0]
+                ]
             ]
             area = [
+                [
                 [1, 2, 2, 2, 3, 3, 3, 3, 3],
                 [1, 2, 2, 2, 2, 4, 4, 3, 3],
                 [1, 5, 2, 2, 4, 4, 4, 3, 3],
@@ -362,9 +397,11 @@ def play(lvl):
                 [1, 7, 7, 7, 7, 8, 8, 8, 8],
                 [1, 9, 7, 7, 7, 8, 8, 8, 8],
                 [1, 9, 9, 9, 9, 9, 9, 9, 9]
+                ]
             ]
         elif random.choice(random_list) % 3 == 1:
             data = [
+                [
                 [0, 2, 0, 0, 0, 6, 8, 0, 0],
                 [4, 8, 0, 0, 0, 7, 6, 0, 0],
                 [0, 0, 0, 0, 1, 0, 0, 4, 0],
@@ -374,8 +411,10 @@ def play(lvl):
                 [0, 1, 0, 0, 4, 0, 0, 0, 0],
                 [0, 0, 2, 5, 0, 0, 0, 7, 9],
                 [0, 0, 8, 9, 0, 0, 0, 3, 0]
+                ]
             ]
             area = [
+                [
                 [1, 2, 2, 2, 3, 3, 3, 3, 3],
                 [1, 2, 2, 2, 2, 4, 4, 3, 3],
                 [1, 5, 2, 2, 4, 4, 4, 3, 3],
@@ -385,9 +424,11 @@ def play(lvl):
                 [1, 7, 7, 7, 7, 8, 8, 8, 8],
                 [1, 9, 7, 7, 7, 8, 8, 8, 8],
                 [1, 9, 9, 9, 9, 9, 9, 9, 9]
+                ]
             ]
         else:
             data = [
+                [
                 [0, 2, 0, 0, 0, 6, 8, 0, 0],
                 [4, 8, 0, 0, 0, 7, 6, 0, 0],
                 [0, 0, 0, 0, 1, 0, 0, 4, 0],
@@ -397,8 +438,10 @@ def play(lvl):
                 [0, 1, 0, 0, 4, 0, 0, 0, 0],
                 [0, 0, 2, 5, 0, 0, 0, 7, 9],
                 [0, 0, 8, 9, 0, 0, 0, 3, 0]
+                ]
             ]
             area = [
+                [
                 [1, 2, 2, 2, 3, 3, 3, 3, 3],
                 [1, 2, 2, 2, 2, 4, 4, 3, 3],
                 [1, 5, 2, 2, 4, 4, 4, 3, 3],
@@ -408,6 +451,7 @@ def play(lvl):
                 [1, 7, 7, 7, 7, 8, 8, 8, 8],
                 [1, 9, 7, 7, 7, 8, 8, 8, 8],
                 [1, 9, 9, 9, 9, 9, 9, 9, 9]
+                ]
             ]
 
     elif lvl == 3:
@@ -503,34 +547,35 @@ def play(lvl):
                     for cell in row:
                         if cell.collidepoint(mouse_pos):
                             active_cell = cell
-
-                if active_cell and not game.board[active_cell.row][active_cell.col].editable:
+                # ini harus diganti untuk multisudoku
+                if active_cell and not game.board[0][active_cell.row][active_cell.col].editable:
                     active_cell = None
 
             if event.type == pygame.KEYUP:
                 if active_cell is not None:
+                    # harus diganti ketika multisudoku
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
-                        game.board[active_cell.row][active_cell.col].value = 0
+                        game.board[0][active_cell.row][active_cell.col].value = 0
                     if event.key == pygame.K_1 or event.key == pygame.K_KP1:
-                        game.board[active_cell.row][active_cell.col].value = 1
+                        game.board[0][active_cell.row][active_cell.col].value = 1
                     if event.key == pygame.K_2 or event.key == pygame.K_KP2:
-                        game.board[active_cell.row][active_cell.col].value = 2
+                        game.board[0][active_cell.row][active_cell.col].value = 2
                     if event.key == pygame.K_3 or event.key == pygame.K_KP3:
-                        game.board[active_cell.row][active_cell.col].value = 3
+                        game.board[0][active_cell.row][active_cell.col].value = 3
                     if event.key == pygame.K_4 or event.key == pygame.K_KP4:
-                        game.board[active_cell.row][active_cell.col].value = 4
+                        game.board[0][active_cell.row][active_cell.col].value = 4
                     if event.key == pygame.K_5 or event.key == pygame.K_KP5:
-                        game.board[active_cell.row][active_cell.col].value = 5
+                        game.board[0][active_cell.row][active_cell.col].value = 5
                     if event.key == pygame.K_6 or event.key == pygame.K_KP6:
-                        game.board[active_cell.row][active_cell.col].value = 6
+                        game.board[0][active_cell.row][active_cell.col].value = 6
                     if event.key == pygame.K_7 or event.key == pygame.K_KP7:
-                        game.board[active_cell.row][active_cell.col].value = 7
+                        game.board[0][active_cell.row][active_cell.col].value = 7
                     if event.key == pygame.K_8 or event.key == pygame.K_KP8:
-                        game.board[active_cell.row][active_cell.col].value = 8
+                        game.board[0][active_cell.row][active_cell.col].value = 8
                     if event.key == pygame.K_9 or event.key == pygame.K_KP9:
-                        game.board[active_cell.row][active_cell.col].value = 9
+                        game.board[0][active_cell.row][active_cell.col].value = 9
                     if event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
-                        game.board[active_cell.row][active_cell.col].value = None
+                        game.board[0][active_cell.row][active_cell.col].value = None
 
         screen.fill(white)
 

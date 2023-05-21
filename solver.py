@@ -1,11 +1,12 @@
 # pylint: skip-file
 
 class Cell:
-    def __init__(self, row, col, value, editable):
+    def __init__(self, papan ,row, col, value, editable):
         self.row = row
         self.col = col
         self.value = value
         self._editable = editable
+        self.papan = papan
 
     @property
     def row(self):
@@ -51,69 +52,105 @@ class Cell:
 class Sudoku:
     def __init__(self, board,areaM):
         self.board = []
-        self.area = {}
-        self.area.update(areaM)
-        for row in range(9):
+        self.area = []
+        for papan in range(len(board)):
             self.board.append([])
-            for col in range(9):
-                if board[row][col] == 0:
-                    val = None
-                    editable = True
-                else:
-                    val = board[row][col]
-                    editable = False
-                self.board[row].append(Cell(row, col, val, editable))
-    def printdict(self):
-        for region, coordinates in self.area.items():
-            print(region, ":", coordinates)
+            self.area.append(areaM[papan])
+            for row in range(9):
+                self.board[papan].append([])
+                for col in range(9):
+                    if board[papan][row][col] == 0:
+                        val = None
+                        editable = True
+                    else:
+                        val = board[papan][row][col]
+                        editable = False
+                    self.board[papan][row].append(Cell(papan, row, col, val, editable))
+
 
     def find_region(self, region_dict, i, j):
         for v, d in region_dict.items():
             if (i, j) in d:
                 return v
 
+
     def check_move(self, cell, num):
         for col in range(9):
-            if self.board[cell.row][col].value == num and col != cell.col:
+            if self.board[cell.papan][cell.row][col].value == num and col != cell.col:
                 return False
-
+        
         for row in range(9):
-            if self.board[row][cell.col].value == num and row != cell.row:
+            if self.board[cell.papan][row][cell.col].value == num and row != cell.row:
                 return False
+        regional_point = self.find_region(self.area[cell.papan], cell.row, cell.col)
 
-        regional_point = self.find_region(self.area, cell.row, cell.col)
-        flag = False
-        for i, j in self.area[regional_point]:
-            if self.board[i][j].value == num:
-                if flag:
+        # kasus apabila papan pertama area 9 diisi
+        if cell.papan ==0 and regional_point == 9 and len(cell)==2:
+            for col in range(9):
+                if self.board[2][cell.row - 6][col].value == num and col != cell.col - 6 :
                     return False
-                flag = True
+            for row in range(9):
+                if self.board[2][row][cell.col - 6].value == num and row !=cell.row - 6:
+                    return False
+        # kasus apabila papan kedua area 1 diisi
+        # boleh pilih salah satu karena intesect
+        elif cell.papan ==1 and regional_point == 1 and len(cell)==2:
+            for col in range(9):
+                if self.board[1][cell.row + 6][col].value == num and col != cell.col + 6 :
+                    return False
+            for row in range(9):
+                if self.board[1][row][cell.col + 6].value == num and row !=cell.row+6:
+                    return False
+
+        flag = False
+        # for i, j in self.area[cell.papan][regional_point]:
+        #     if self.board[cell.papan][i][j].value == num:
+        #         if flag:
+        #             return False
+        #         flag = True
         return True
 
     def get_possible_moves(self, cell):
         possible_moves = [num for num in range(1, 10)]
 
         for col in range(9):
-            if self.board[cell.row][col].value in possible_moves:
+            if self.board[cell.papan][cell.row][col].value in possible_moves:
                 possible_moves.remove(self.board[cell.row][col].value)
 
         for row in range(9):
-            if self.board[row][cell.col].value in possible_moves:
+            if self.board[cell.papan][row][cell.col].value in possible_moves:
                 possible_moves.remove(self.board[row][cell.col].value)
-
-        for row in range(cell.row // 3 * 3, cell.row // 3 * 3 + 3):
-            for col in range(cell.col // 3 * 3, cell.col // 3 * 3 + 3):
-                if self.board[row][col].value in possible_moves:
-                    possible_moves.remove(self.board[row][col].value)
+        # kasus apabila papan pertama area 9 diisi
+        regional_point = self.find_region(self.area[cell.papan], cell.row, cell.col)
+        if cell.papan == 0 and regional_point == 9 and len(cell)==2:
+            for col in range(9):
+                if self.board[1][cell.row-6][col].value in possible_moves:
+                    possible_moves.remove(self.board[2][cell.row-6][col].value)
+            for row in range(9):
+                if self.board[1][row][cell.col -6].value in possible_moves:
+                    possible_moves.remove(self.board[2][row][cell.col -6].value)
+        # kasus apabila papan kedua area 1 diisi
+        # boleh pilih salah satu karena intesect
+        elif cell.papan == 1 and regional_point == 1 and len(cell)==2:
+            for col in range(9):
+                if self.board[0][cell.row+6][col].value in possible_moves:
+                    possible_moves.remove(self.board[2][cell.row+6][col].value)
+            for row in range(9):
+                if self.board[0][row][cell.col + 6].value in possible_moves:
+                    possible_moves.remove(self.board[2][row][cell.col + 6].value)
+        
+        for i, j in self.area[cell.papan][regional_point]:
+            if self.board[cell.papan][i][j].value in possible_moves:
+                possible_moves.remove(self.board[cell.papan][i][j].value)
 
         return possible_moves
 
     def get_empty_cell(self):
-        for row in range(9):
-            for col in range(9):
-                if self.board[row][col].value is None:
-                    return self.board[row][col]
-
+        for p in range(len(self.board)):
+            for row in range(9):
+                for col in range(9):
+                    if self.board[p][row][col].value is None:
+                        return self.board[p][row][col]
         return False
 
     def solve(self):
@@ -123,7 +160,6 @@ class Sudoku:
             return True
 
         for val in range(1, 10):
-
             if not self.check_move(cell, val):
                 continue
 
@@ -137,7 +173,7 @@ class Sudoku:
         return False
 
     def get_board(self):
-        return [[self.board[row][col].value for col in range(9)] for row in range(9)]
+        return [[[self.board[p][row][col].value for col in range(9)] for row in range(9)]for p in range(len(self.board))]
 
     def test_solve(self):
         current_board = self.get_board()
@@ -150,10 +186,11 @@ class Sudoku:
         return solvable
 
     def reset(self):
-        for row in self.board:
-            for cell in row:
-                if cell.editable:
-                    cell.value = None
+        for p in range(len(self.board)):
+            for row in self.board[p]:
+                for cell in row:
+                    if cell.editable:
+                        cell.value = None
 
     def __str__(self):
         board = ' -----------------------\n'
