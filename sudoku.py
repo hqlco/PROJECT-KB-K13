@@ -6,7 +6,6 @@ from solver import Sudoku
 import random
 
 pygame.init()
-random_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 cell_size = 50
 minor_grid_size = 1
 major_grid_size = 3
@@ -26,9 +25,12 @@ red = 200, 0, 0
 inactive_btn = 51, 255, 255
 active_btn = 51, 153, 255
 region_dict = []
-# screen = pygame.display.set_mode(size)
-# menuscreen = pygame.display.set_mode(size)
+
+pygame.display.set_mode((300, height))
 pygame.display.set_caption('Kelompok 13 - SUDOKU SOLVER')
+screen = "menu"
+run = True
+lvl = None
 
 
 class RectCell(pygame.Rect):
@@ -66,17 +68,15 @@ def create_cells():
 
 
 # lvl 1
-
-
-def draw_grid(screen, area):
+def draw_grid(area):
     # draw BG
-    pygame.draw.line(screen, black, (6, 5),
+    pygame.draw.line(pygame.display.get_surface(), black, (6, 5),
                      (6, 472), 3)
-    pygame.draw.line(screen, black, (5, 6),
+    pygame.draw.line(pygame.display.get_surface(), black, (5, 6),
                      (472, 6), 3)
-    pygame.draw.line(screen, black, (471, 5),
+    pygame.draw.line(pygame.display.get_surface(), black, (471, 5),
                      (471, 472), 3)
-    pygame.draw.line(screen, black, (5, 471),
+    pygame.draw.line(pygame.display.get_surface(), black, (5, 471),
                      (472, 471), 3)
     jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471]
     # loop 9 times
@@ -85,35 +85,33 @@ def draw_grid(screen, area):
         for i in range(9):
             for j in range(8):
                 if area[p][i][j] == area[p][i][j + 1]:
-                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
-                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
     # sumbu X
     for p in range(len(area)):
         for i in range(8):
             for j in range(9):
                 if area[p][i][j] == area[p][i + 1][j]:
-                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
-                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
 
 # lvl 2
-
-
-def draw_grid_lvl2(screen, area):
+def draw_grid_lvl2(area):
     # draw BG
-    pygame.draw.line(screen, black, (6, 5),
+    pygame.draw.line(pygame.display.get_surface(), black, (6, 5),
                      (6, 472), 3)
-    pygame.draw.line(screen, black, (5, 6),
+    pygame.draw.line(pygame.display.get_surface(), black, (5, 6),
                      (472, 6), 3)
-    pygame.draw.line(screen, black, (471, 5),
+    pygame.draw.line(pygame.display.get_surface(), black, (471, 5),
                      (471, 472), 3)
-    pygame.draw.line(screen, black, (5, 471),
+    pygame.draw.line(pygame.display.get_surface(), black, (5, 471),
                      (472, 471), 3)
     jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471]
     # loop 9 times
@@ -122,36 +120,36 @@ def draw_grid_lvl2(screen, area):
         for i in range(9):
             for j in range(8):
                 if area[p][i][j] == area[p][i][j + 1]:
-                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
-                    pygame.draw.line(screen, black, (jarak[j + 1], jarak[i]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
     # sumbu X
     for p in range(len(area)):
         for i in range(8):
             for j in range(9):
                 if area[p][i][j] == area[p][i + 1][j]:
-                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
-                    pygame.draw.line(screen, black, (jarak[j], jarak[i + 1]),
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
 
 # lvl 3
-def draw_grid_lvl3(screen):
+def draw_grid_lvl3():
     lines_drawn = 0
     pos = buffer + major_grid_size + cell_size
     # draw grid with jigsaw pattern
 
-    # pygame.draw.line(screen, black, (pos, buffer),
+    # pygame.draw.line(pygame.display.get_surface(), black, (pos, buffer),
     #                  (pos, width-buffer-1), minor_grid_size)
-    # pygame.draw.line(screen, black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
+    # pygame.draw.line(pygame.display.get_surface(), black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
     while lines_drawn < 6:
-        pygame.draw.line(screen, black, (pos, buffer),
+        pygame.draw.line(pygame.display.get_surface(), black, (pos, buffer),
                          (pos, width - buffer - 1), minor_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos),
+        pygame.draw.line(pygame.display.get_surface(), black, (buffer, pos),
                          (width - buffer - 1, pos), minor_grid_size)
 
         lines_drawn += 1
@@ -161,13 +159,13 @@ def draw_grid_lvl3(screen):
             pos += cell_size + major_grid_size
 
     for pos in range(buffer + major_grid_size // 2, width, cell_size * 3 + minor_grid_size * 2 + major_grid_size):
-        pygame.draw.line(screen, black, (pos, buffer),
+        pygame.draw.line(pygame.display.get_surface(), black, (pos, buffer),
                          (pos, width - buffer - 1), major_grid_size)
-        pygame.draw.line(screen, black, (buffer, pos),
+        pygame.draw.line(pygame.display.get_surface(), black, (buffer, pos),
                          (width - buffer - 1, pos), major_grid_size)
 
 
-def fill_cells(cells, board, screen):
+def fill_cells(cells, board):
     font = pygame.font.Font(None, 36)
 
     for p in range(len(board.board)):
@@ -191,12 +189,12 @@ def fill_cells(cells, board, screen):
 
                 xpos, ypos = cells[row][col].center
                 textbox = text.get_rect(center=(xpos, ypos))
-                screen.blit(text, textbox)
+                pygame.Surface.blit(pygame.display.get_surface(), text, textbox)
 
 
-def draw_button(left, top, width, height, border, color, border_color, text, screen):
-    pygame.draw.rect(screen, border_color, (left, top,
-                                            width + border * 2, height + border * 2))
+def draw_button(left, top, width, height, border, color, border_color, text):
+    pygame.draw.rect(pygame.display.get_surface(), border_color, 
+                     (left, top, width + border * 2, height + border * 2))
 
     button = pygame.Rect(
         left + border,
@@ -204,31 +202,33 @@ def draw_button(left, top, width, height, border, color, border_color, text, scr
         width,
         height
     )
-    pygame.draw.rect(screen, color, button)
+    pygame.draw.rect(pygame.display.get_surface(), color, button)
 
     font = pygame.font.Font(None, 26)
     text = font.render(text, 1, black)
     xpos, ypos = button.center
     textbox = text.get_rect(center=(xpos, ypos))
-    screen.blit(text, textbox)
+    pygame.Surface.blit(pygame.display.get_surface(), text, textbox)
 
     return button
 
 
-def draw_board(active_cell, cells, game, screen, lvl, area):
+def draw_board(active_cell, cells, game, area):
+    global lvl
     if (lvl == 1):
-        draw_grid(screen, area)
+        draw_grid(area)
     elif (lvl == 2):
-        draw_grid_lvl2(screen, area)
+        draw_grid_lvl2(area)
     elif (lvl == 3):
-        draw_grid_lvl3(screen)
+        draw_grid_lvl3()
     if active_cell is not None:
-        pygame.draw.rect(screen, gray, active_cell)
+        pygame.draw.rect(pygame.display.get_surface(), gray, active_cell)
 
-    fill_cells(cells, game, screen)
+    fill_cells(cells, game)
 
 
 def dictConv(matrix):
+    global region_dict
     for i in range(len(matrix)):
         dict = {}
         for j in range(len(matrix[i])):
@@ -292,9 +292,12 @@ def check_sudoku(sudoku):
 
 
 
-def play(lvl):
+def play():
+    global screen, run, lvl
+
+    num = random.randint(0, 2)
     if lvl == 1:
-        if random.choice(random_list) % 3 == 0:
+        if num == 0:
             data = [
                 [
                 [0, 0, 0, 9, 0, 0, 0, 3, 0],
@@ -321,7 +324,7 @@ def play(lvl):
                 [7, 7, 7, 8, 8, 8, 9, 9, 9]
                 ]
             ]
-        elif random.choice(random_list) % 3 == 1:
+        elif num == 1:
             data = [
                 [
                 [0, 0, 0, 9, 0, 0, 0, 3, 0],
@@ -376,7 +379,7 @@ def play(lvl):
                 ]
             ]
     elif lvl == 2:
-        if random.choice(random_list) % 3 == 0:
+        if num == 0:
             data = [
                 [
                 [0, 2, 0, 0, 0, 6, 8, 0, 0],
@@ -403,7 +406,7 @@ def play(lvl):
                 [1, 9, 9, 9, 9, 9, 9, 9, 9]
                 ]
             ]
-        elif random.choice(random_list) % 3 == 1:
+        elif num == 1:
             data = [
                 [
                 [0, 2, 0, 0, 0, 6, 8, 0, 0],
@@ -459,7 +462,6 @@ def play(lvl):
             ]
 
     elif lvl == 3:
-        # TBA
         data = [
             [
                 [6, 0, 3, 7, 0, 5, 9, 0, 8],
@@ -500,12 +502,15 @@ def play(lvl):
         button_width + button_border * 2,
         button_height + button_border * 2
     )
-    screen = pygame.display.set_mode(size)
+    pygame.display.set_mode(size)
 
     while True:
+
+        # Controller
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                run = False
+                return
 
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_pos = pygame.mouse.get_pos()
@@ -514,9 +519,9 @@ def play(lvl):
                     game.reset()
 
                 # if solve_btn.collidepoint(mouse_pos):
-                #     screen.fill(white)
+                #     pygame.Surface.fill(pygame.display.get_surface(), white)
                 #     active_cell = None
-                #     draw_board(active_cell, cells, game, screen)
+                #     draw_board(active_cell, cells, game)
                 #     reset_btn = draw_button(
                 #         width - buffer - button_border*2 - button_width,
                 #         height - button_height - button_border*2 - buffer,
@@ -525,8 +530,7 @@ def play(lvl):
                 #         button_border,
                 #         inactive_btn,
                 #         black,
-                #         'Reset',
-                #         screen
+                #         'Reset'
                 #     )
                 #     solve_btn = draw_button(
                 #         width - buffer*2 - button_border*4 - button_width*2,
@@ -536,14 +540,12 @@ def play(lvl):
                 #         button_border,
                 #         inactive_btn,
                 #         black,
-                #         'Visual Solve',
-                #         screen
+                #         'Visual Solve'
                 #     )
                 #     pygame.display.flip()
 
                 if back_btn.collidepoint(mouse_pos):
-                    screen.fill(white)
-                    pygame.display.set_mode((300, height))
+                    screen = "level"
                     return
 
                 active_cell = None
@@ -581,10 +583,9 @@ def play(lvl):
                     if event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
                         game.board[0][active_cell.row][active_cell.col].value = None
 
-        screen.fill(white)
-
-        draw_board(active_cell, cells, game, screen, lvl, area)
-
+        # GUI
+        pygame.Surface.fill(pygame.display.get_surface(), white)
+        draw_board(active_cell, cells, game, area)
         reset_btn = draw_button(
             width - buffer - button_border * 2 - button_width,
             height - button_height - button_border * 2 - buffer,
@@ -593,8 +594,7 @@ def play(lvl):
             button_border,
             inactive_btn,
             black,
-            'Reset',
-            screen
+            'Reset'
         )
         solve_btn = draw_button(
             width - buffer * 2 - button_border * 4 - button_width * 2,
@@ -604,8 +604,7 @@ def play(lvl):
             button_border,
             inactive_btn,
             black,
-            'Visual Solve',
-            screen
+            'Visual Solve'
         )
 
         if reset_btn.collidepoint(pygame.mouse.get_pos()):
@@ -617,8 +616,7 @@ def play(lvl):
                 button_border,
                 active_btn,
                 black,
-                'Reset',
-                screen
+                'Reset'
             )
         if solve_btn.collidepoint(pygame.mouse.get_pos()):
             solve_btn = draw_button(
@@ -629,8 +627,7 @@ def play(lvl):
                 button_border,
                 active_btn,
                 black,
-                'Visual Solve',
-                screen
+                'Visual Solve'
             )
 
         back_btn = draw_button(
@@ -641,8 +638,7 @@ def play(lvl):
             button_border,
             inactive_btn,
             black,
-            'Back',
-            screen
+            'Back'
         )
         if back_btn.collidepoint(pygame.mouse.get_pos()):
             back_btn = draw_button(
@@ -653,8 +649,7 @@ def play(lvl):
                 button_border,
                 active_btn,
                 black,
-                'Back',
-                screen
+                'Back'
             )
 
         if not game.get_empty_cell():
@@ -662,40 +657,44 @@ def play(lvl):
                 font = pygame.font.Font(None, 36)
                 text = font.render('Solved!', 1, green)
                 textbox = text.get_rect(center=(solve_rect.center))
-                screen.blit(text, textbox)
+                pygame.Surface.blit(pygame.display.get_surface() ,text, textbox)
 
         pygame.display.flip()
 
 
 def level():
-    screen = pygame.display.set_mode((300, height))
+    global screen, run, lvl
+    pygame.display.set_mode((300, height))
+
     while True:
+
+        # Controller
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                run = False
+                return
 
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_pos = pygame.mouse.get_pos()
 
                 if lvl1_btn.collidepoint(mouse_pos):
-                    screen.fill(white)
-                    pygame.display.flip()
-                    play(1)
+                    screen = "play"
+                    lvl = 1
+                    return
                 if lvl2_btn.collidepoint(mouse_pos):
-                    screen.fill(white)
-                    pygame.display.flip()
-                    play(2)
+                    screen = "play"
+                    lvl = 2
+                    return
                 if lvl3_btn.collidepoint(mouse_pos):
-                    screen.fill(white)
-                    pygame.display.flip()
-                    play(3)
+                    screen = "play"
+                    lvl = 3
+                    return
                 if back_btn.collidepoint(mouse_pos):
-                    screen.fill(white)
-                    pygame.display.flip()
+                    screen = "menu"
                     return
 
-        screen.fill(white)
-
+        # GUI
+        pygame.Surface.fill(pygame.display.get_surface(), white)
         lvl1_btn = draw_button(
             300 / 2 - (button_width + button_border) / 2,
             height - (button_height + button_border) * 9,
@@ -704,8 +703,7 @@ def level():
             button_border,
             inactive_btn,
             black,
-            'Level 1',
-            screen
+            'Level 1'
         )
         if lvl1_btn.collidepoint(pygame.mouse.get_pos()):
             lvl1_btn = draw_button(
@@ -716,8 +714,7 @@ def level():
                 button_border,
                 active_btn,
                 black,
-                'Level 1',
-                screen
+                'Level 1'
             )
 
         lvl2_btn = draw_button(
@@ -728,8 +725,7 @@ def level():
             button_border,
             inactive_btn,
             black,
-            'Level 2',
-            screen
+            'Level 2'
         )
         if lvl2_btn.collidepoint(pygame.mouse.get_pos()):
             lvl2_btn = draw_button(
@@ -740,8 +736,7 @@ def level():
                 button_border,
                 active_btn,
                 black,
-                'Level 2',
-                screen
+                'Level 2'
             )
 
         lvl3_btn = draw_button(
@@ -752,8 +747,7 @@ def level():
             button_border,
             inactive_btn,
             black,
-            'Level 3',
-            screen
+            'Level 3'
         )
         if lvl3_btn.collidepoint(pygame.mouse.get_pos()):
             lvl3_btn = draw_button(
@@ -764,8 +758,7 @@ def level():
                 button_border,
                 active_btn,
                 black,
-                'Level 3',
-                screen
+                'Level 3'
             )
 
         back_btn = draw_button(
@@ -776,8 +769,7 @@ def level():
             button_border,
             inactive_btn,
             black,
-            'Back',
-            screen
+            'Back'
         )
         if back_btn.collidepoint(pygame.mouse.get_pos()):
             back_btn = draw_button(
@@ -788,30 +780,33 @@ def level():
                 button_border,
                 active_btn,
                 black,
-                'Back',
-                screen
+                'Back'
             )
 
         pygame.display.flip()
 
 
 def menu():
-    screen = pygame.display.set_mode((300, height))
+    global screen, run
+    pygame.display.set_mode((300, height))
+
     while True:
+
+        # Controller
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                run = False
+                return
 
             if event.type == pygame.MOUSEBUTTONUP:
                 mouse_pos = pygame.mouse.get_pos()
 
                 if play_btn.collidepoint(mouse_pos):
-                    screen.fill(white)
-                    pygame.display.flip()
-                    level()
+                    screen = "level"
+                    return
 
-        screen.fill(white)
-
+        # GUI
+        pygame.Surface.fill(pygame.display.get_surface(), white)
         play_btn = draw_button(
             300 / 2 - (button_width + button_border) / 2,
             height / 2 - (button_height + button_border) / 2,
@@ -820,8 +815,7 @@ def menu():
             button_border,
             inactive_btn,
             black,
-            'Play',
-            screen
+            'Play'
         )
         if play_btn.collidepoint(pygame.mouse.get_pos()):
             play_btn = draw_button(
@@ -832,13 +826,24 @@ def menu():
                 button_border,
                 active_btn,
                 black,
-                'Play',
-                screen
+                'Play'
             )
 
         pygame.display.flip()
 
 
+def run():
+    global screen, run
+    while run:
+        if screen == "menu":
+            menu()
+        elif screen == "level":
+            level()
+        elif screen == "play":
+            play()
+        else:
+            raise Exception("Error: No Matching Surface")
+
+
 if __name__ == '__main__':
-    # play()
-    menu()
+    run()
