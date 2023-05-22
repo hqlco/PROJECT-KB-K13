@@ -34,7 +34,7 @@ lvl = None
 
 
 class RectCell(pygame.Rect):
-    def __init__(self, papan ,left, top, row, col):
+    def __init__(self, papan, left, top, row, col):
         super().__init__(left, top, cell_size, cell_size)
         self.row = row
         self.col = col
@@ -49,7 +49,7 @@ def create_cells(data):
         row = 0
         col = 0
         left = buffer + major_grid_size + (p*310)
-        top = buffer + major_grid_size  + (p*310)
+        top = buffer + major_grid_size + (p*310)
         while row < 9:
             cells[p].append([])
             while col < 9:
@@ -66,7 +66,7 @@ def create_cells(data):
             left = buffer + major_grid_size + (p*310)
             col = 0
             row += 1
-        p+=1
+        p += 1
 
     return cells
 
@@ -146,24 +146,25 @@ def draw_grid_lvl3(area):
     # draw BG
     # Diagonal
     pygame.draw.line(pygame.display.get_surface(), black, (5, 6),
-                    (472, 6), 3)
+                     (472, 6), 3)
     pygame.draw.line(pygame.display.get_surface(), black, (471, 316),
-                    (472+316, 316), 3)
+                     (472+316, 316), 3)
     pygame.draw.line(pygame.display.get_surface(), black, (5, 471),
-                    (316, 471), 3)
+                     (316, 471), 3)
     pygame.draw.line(pygame.display.get_surface(), black, (316, 471+316),
-                    (472+316, 471+316), 3)
+                     (472+316, 471+316), 3)
     # Horizontal
     pygame.draw.line(pygame.display.get_surface(), black, (6, 5),
-                    (6, 472), 3)
+                     (6, 472), 3)
     pygame.draw.line(pygame.display.get_surface(), black, (316, 471),
-                    (316, 472+316), 3)
+                     (316, 472+316), 3)
     pygame.draw.line(pygame.display.get_surface(), black, (471, 5),
-                    (471, 316), 3)
+                     (471, 316), 3)
     pygame.draw.line(pygame.display.get_surface(), black, (471+316, 316),
-                    (471+316, 472+316), 3)
-    
-    jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471, 523, 574, 626, 678, 729, 781]
+                     (471+316, 472+316), 3)
+
+    jarak = [6, 58, 109, 161, 213, 264, 316, 368,
+             419, 471, 523, 574, 626, 678, 729, 781]
     # 6, 58, 109, 161, 213, 264, 316, 368, 419, 471, 523, 574, 626, 678, 729, 781
     #  52   51  52   52    51   52   52  51   52   52   51  52   52    51   52
     # loop 9 times
@@ -173,20 +174,20 @@ def draw_grid_lvl3(area):
             for j in range(8):
                 if area[p][i][j] == area[p][i][j + 1]:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[(j + 1)+(p*6)], jarak[i+(p*6)]),
-                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), minor_grid_size)
+                                     (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), minor_grid_size)
                 else:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[(j + 1)+(p*6)], jarak[i+(p*6)]),
-                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), major_grid_size)
+                                     (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), major_grid_size)
     # sumbu X
     for p in range(len(area)):
         for i in range(8):
             for j in range(9):
                 if area[p][i][j] == area[p][i + 1][j]:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j+(p*6)], jarak[(i + 1)+(p*6)]),
-                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), minor_grid_size)
+                                     (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), minor_grid_size)
                 else:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j+(p*6)], jarak[(i + 1)+(p*6)]),
-                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), major_grid_size)
+                                     (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), major_grid_size)
 
 
 def fill_cells(cells, board):
@@ -319,6 +320,7 @@ def find_region(dict, i, j):
 #     pygame.display.update([cell_rect])
 #     return False
 
+
 def check_sudoku(sudoku):
     if sudoku.get_empty_cell():
         raise ValueError('Game is not complete')
@@ -356,7 +358,66 @@ def check_sudoku(sudoku):
         b.append(box_sets)
     return True
 
-def hint(game, len_p, len_r, len_c):
+
+N = 9
+
+
+def isSafe(grid, row, col, num):
+
+    for x in range(9):
+        if grid[row][x] == num:
+            return False
+
+    for x in range(9):
+        if grid[x][col] == num:
+            return False
+
+    startRow = row - row % 3
+    startCol = col - col % 3
+    for i in range(3):
+        for j in range(3):
+            if grid[i + startRow][j + startCol] == num:
+                return False
+    return True
+
+
+def solveSudoku(grid, row, col):
+
+    if (row == N - 1 and col == N):
+        return True
+
+    if col == N:
+        row += 1
+        col = 0
+
+    if grid[row][col] > 0:
+        return solveSudoku(grid, row, col + 1)
+    for num in range(1, N + 1, 1):
+
+        if isSafe(grid, row, col, num):
+
+            grid[row][col] = num
+
+            if solveSudoku(grid, row, col + 1):
+                return True
+
+        grid[row][col] = 0
+    return False
+
+
+def hint(game, len_p, len_r, len_c, data, area):
+    data2 = [
+            [0, 0, 0, 9, 0, 0, 0, 3, 0],
+            [3, 0, 6, 0, 2, 0, 0, 4, 0],
+            [2, 0, 4, 0, 0, 3, 1, 0, 6],
+            [0, 7, 0, 0, 5, 1, 0, 8, 0],
+            [0, 3, 1, 0, 6, 0, 0, 5, 7],
+            [5, 0, 9, 0, 0, 0, 6, 0, 0],
+            [4, 1, 0, 0, 0, 2, 0, 7, 8],
+            [7, 6, 3, 0, 0, 5, 4, 0, 0],
+            [9, 2, 8, 0, 0, 4, 0, 0, 1]
+    ]
+    solveSudoku(data2, 0, 0)
     if len_p > 1:
         p = random.randrange(0, len_p-1)
     else:
@@ -364,13 +425,15 @@ def hint(game, len_p, len_r, len_c):
     r = random.randrange(0, len_r-1)
     c = random.randrange(0, len_c-1)
     val = random.randrange(1, 9)
-    game.board[p][r][c].value = val
+    game.board[p][r][c].value = data2[r][c]
+
 
 def play():
     global screen, run, lvl
     num = random.randint(0, 2)
     if lvl == 1:
-        pygame.display.set_mode((width + button_width + button_border*2 + buffer*2, 472 + buffer))
+        pygame.display.set_mode(
+            (width + button_width + button_border*2 + buffer*2, 472 + buffer))
         if num == 0:
             data = [
                 [
@@ -453,7 +516,8 @@ def play():
                 ]
             ]
     elif lvl == 2:
-        pygame.display.set_mode((width + button_width + button_border*2 + buffer*2, 472 + buffer))
+        pygame.display.set_mode(
+            (width + button_width + button_border*2 + buffer*2, 472 + buffer))
         if num == 0:
             data = [
                 [
@@ -563,29 +627,29 @@ def play():
             ]
         ]
         area = [
-                [
-                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                    [7, 7, 7, 8, 8, 8, 9, 9, 9]
-                ],
-                [
-                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                    [7, 7, 7, 8, 8, 8, 9, 9, 9]
-                ]
+            [
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+            ],
+            [
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                [7, 7, 7, 8, 8, 8, 9, 9, 9]
             ]
+        ]
     else:
         raise Exception("Level Error: Out Of Bound")
 
@@ -672,7 +736,8 @@ def play():
                     return
 
                 if hint_btn.collidepoint(mouse_pos):
-                    hint(game, len(data), len(data[0]), len(data[0][0]))
+                    hint(game, len(data), len(data[0]), len(
+                        data[0][0]), data, area)
 
                 active_cell = None
                 for p in cells:
@@ -1011,18 +1076,20 @@ def menu():
 def display_text(text, pos, font, color):
     collection = [word.split(' ') for word in text.splitlines()]
     space = font.size(' ')[0]
-    x,y = pos
+    x, y = pos
     for lines in collection:
         for words in lines:
             word_surface = font.render(words, True, color)
-            word_width , word_height = word_surface.get_size()
+            word_width, word_height = word_surface.get_size()
             if x + word_width >= 800:
                 x = pos[0]
                 y += word_height
-            pygame.Surface.blit(pygame.display.get_surface(), word_surface, (x,y))
+            pygame.Surface.blit(
+                pygame.display.get_surface(), word_surface, (x, y))
             x += word_width + space
         x = pos[0]
         y += word_height
+
 
 def credit():
     global screen, run
@@ -1070,6 +1137,7 @@ def credit():
         display_text(text, (35, 40), font, black)
 
         pygame.display.flip()
+
 
 def run():
     global screen, run
