@@ -148,7 +148,7 @@ class Sudoku:
             if (cell.papan == 1 and cell.Rarea == "region_1")and len(self.board)>1:
                 if not (self.check_move(cell, val) and self.check_move(self.board[0][cell.row+6][cell.col+6],val)):
                     continue
-                self.board[1][cell.row+6][cell.col-+6] = val
+                self.board[0][cell.row+6][cell.col+6].value = val
             cell.value = val
             
             if self.solve():
