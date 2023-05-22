@@ -359,16 +359,19 @@ def check_sudoku(sudoku):
     return True
 
 
-def hint(game, len_p, len_r, len_c):
-    if len_p > 1:
-        p = random.randrange(0, len_p-1)
-    else:
-        p = len_p-1
-    r = random.randrange(0, len_r-1)
-    c = random.randrange(0, len_c-1)
-    val = random.randrange(1, 9)
-
-    game.board[p][r][c].value = val
+def hint(game, data, area, len_p, len_r, len_c):
+    solved = Sudoku(data, area)
+    solved.solve()
+    while True:
+        if len_p > 1:
+            p = random.randrange(0, len_p-1)
+        else:
+            p = len_p-1
+        r = random.randrange(0, len_r-1)
+        c = random.randrange(0, len_c-1)
+        if game.board[p][r][c].editable and game.board[p][r][c].value is None:
+            break
+    game.board[p][r][c].value = solved.board[p][r][c].value
 
 
 def play():
@@ -545,54 +548,153 @@ def play():
 
     elif lvl == 3:
         pygame.display.set_mode((width+316, height+316))
-        data = [
-            [
-                [6, 0, 3, 7, 0, 5, 9, 0, 8],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [4, 0, 5, 8, 0, 6, 7, 0, 2],
-                [7, 0, 2, 1, 0, 8, 4, 0, 6],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [1, 0, 4, 3, 0, 7, 2, 0, 9],
-                [2, 0, 7, 6, 0, 1, 8, 0, 3],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [3, 0, 8, 5, 0, 9, 6, 0, 1]
-            ],
-            [
-                [8, 0, 3, 5, 0, 4, 2, 0, 7],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [6, 0, 1, 9, 0, 7, 3, 0, 5],
-                [1, 0, 6, 8, 0, 5, 7, 0, 3],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [7, 0, 9, 3, 0, 1, 5, 0, 6],
-                [3, 0, 2, 1, 0, 8, 6, 0, 4],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [9, 0, 7, 4, 0, 2, 8, 0, 1]
+        if num == 0:
+            data = [
+                [
+                    [6, 0, 3, 7, 0, 5, 9, 0, 8],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [4, 0, 5, 8, 0, 6, 7, 0, 2],
+                    [7, 0, 2, 1, 0, 8, 4, 0, 6],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [1, 0, 4, 3, 0, 7, 2, 0, 9],
+                    [2, 0, 7, 6, 0, 1, 8, 0, 3],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [3, 0, 8, 5, 0, 9, 6, 0, 1]
+                ],
+                [
+                    [8, 0, 3, 5, 0, 4, 2, 0, 7],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [6, 0, 1, 9, 0, 7, 3, 0, 5],
+                    [1, 0, 6, 8, 0, 5, 7, 0, 3],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [7, 0, 9, 3, 0, 1, 5, 0, 6],
+                    [3, 0, 2, 1, 0, 8, 6, 0, 4],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [9, 0, 7, 4, 0, 2, 8, 0, 1]
+                ]
             ]
-        ]
-        area = [
-            [
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9]
-            ],
-            [
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+            area = [
+                    [
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    ],
+                    [
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    ]
+                ]
+        elif num == 1:
+            data = [
+                [
+                    [1, 0, 0, 4, 0, 3, 0, 0, 6],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 6, 9, 7, 0, 0, 0],
+                    [8, 0, 6, 0, 0, 0, 5, 0, 2],
+                    [0, 0, 7, 0, 8, 0, 4, 0, 0],
+                    [5, 0, 2, 0, 0, 0, 7, 0, 1],
+                    [0, 0, 0, 7, 2, 9, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [2, 0, 0, 5, 0, 4, 0, 0, 0]
+                ],
+                [
+                    [0, 0, 0, 6, 0, 5, 0, 0, 1],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 3, 2, 9, 0, 0, 0],
+                    [9, 0, 8, 0, 0, 0, 7, 0, 2],
+                    [0, 0, 6, 0, 1, 0, 8, 0, 0],
+                    [5, 0, 1, 0, 0, 0, 9, 0, 6],
+                    [0, 0, 0, 7, 8, 6, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [3, 0, 0, 1, 0, 2, 0, 0, 9]
+                ]
             ]
-        ]
+            area = [
+                    [
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    ],
+                    [
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    ]
+                ]
+        else:
+            data = [
+                [
+                    [3, 0, 7, 0, 0, 0, 0, 5, 1],
+                    [0, 0, 0, 6, 0, 0, 3, 0, 7],
+                    [2, 0, 0, 0, 0, 5, 0, 8, 0],
+                    [0, 6, 0, 5, 0, 1, 8, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 1, 9, 0, 6, 0, 3, 0],
+                    [0, 7, 0, 8, 0, 0, 0, 0, 0],
+                    [8, 0, 4, 0, 0, 9, 0, 0, 0],
+                    [6, 5, 0, 0, 0, 0, 0, 0, 0]
+                ],
+                [
+                    [0, 0, 0, 0, 0, 0, 0, 1, 4],
+                    [0, 0, 0, 8, 0, 0, 9, 0, 5],
+                    [0, 0, 0, 0, 0, 2, 0, 3, 0],
+                    [0, 7, 0, 4, 0, 9, 6, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 4, 1, 0, 7, 0, 5, 0],
+                    [0, 1, 0, 3, 0, 0, 0, 0, 8],
+                    [4, 0, 2, 0, 0, 6, 0, 0, 0],
+                    [3, 8, 0, 0, 0, 0, 2, 0, 7]
+                ]
+            ]
+            area = [
+                    [
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    ],
+                    [
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                        [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    ]
+                ]
     else:
         raise Exception("Level Error: Out Of Bound")
 
@@ -615,23 +717,27 @@ def play():
         solve_x = btn_x
         hint_x = btn_x
         back_x = btn_x
+        clock_x = width+buffer+button_border
 
-        reset_y = buffer
-        solve_y = button_height + button_border*2 + buffer*3
-        hint_y = button_height*2 + button_border*4 + buffer*5
-        back_y = button_height*3 + button_border*6 + buffer*7
+        reset_y = button_height + button_border*2 + buffer*3
+        solve_y = button_height*2 + button_border*4 + buffer*5
+        hint_y = button_height*3 + button_border*6 + buffer*7
+        back_y = button_height*4 + button_border*8 + buffer*9
+        clock_y = buffer+button_height/3
     else:
         btn_x = (width+316)/2 - (button_width*4 + button_border*8 + buffer*6)/2
         reset_x = btn_x
         solve_x = btn_x + (button_width + button_border*2 + buffer*2)
         hint_x = btn_x + (button_width*2 + button_border*4 + buffer*4)
         back_x = btn_x + (button_width*3 + button_border*6 + buffer*6)
+        clock_x = 574
 
         btn_y = (height+316) - (button_height + button_border*2 + buffer)
         reset_y = btn_y
         solve_y = btn_y
         hint_y = btn_y
         back_y = btn_y
+        clock_y = 161 - ((161-109)/2)
 
     while True:
 
@@ -647,39 +753,15 @@ def play():
                 if reset_btn.collidepoint(mouse_pos):
                     game.reset()
 
-                # if solve_btn.collidepoint(mouse_pos):
-                #     pygame.Surface.fill(pygame.display.get_surface(), white)
-                #     active_cell = None
-                #     draw_board(active_cell, cells, game, area)
-                #     reset_btn = draw_button(
-                #         width - buffer - button_border*2 - button_width,
-                #         height - button_height - button_border*2 - buffer,
-                #         button_width,
-                #         button_height,
-                #         button_border,
-                #         inactive_btn,
-                #         black,
-                #         'Reset'
-                #     )
-                #     solve_btn = draw_button(
-                #         width - buffer*2 - button_border*4 - button_width*2,
-                #         height - button_height - button_border*2 - buffer,
-                #         button_width,
-                #         button_height,
-                #         button_border,
-                #         inactive_btn,
-                #         black,
-                #         'Visual Solve'
-                #     )
-                #     pygame.display.flip()
-                #     visual_solve(game, cells, area)
+                if solve_btn.collidepoint(mouse_pos):
+                    game.solve()
 
                 if back_btn.collidepoint(mouse_pos):
                     screen = "level"
                     return
 
                 if hint_btn.collidepoint(mouse_pos):
-                    hint(game, len(data), len(data[0]), len(data[0][0]))
+                    hint(game, data, region_dict, len(data), len(data[0]), len(data[0][0]))
 
                 active_cell = None
                 for p in cells:
@@ -721,72 +803,6 @@ def play():
         pygame.Surface.fill(pygame.display.get_surface(), white)
         draw_board(active_cell, cells, game, area)
 
-        reset_btn = draw_button(
-            reset_x,
-            reset_y,
-            button_width,
-            button_height,
-            button_border,
-            inactive_btn,
-            black,
-            'Reset'
-        )
-        solve_btn = draw_button(
-            solve_x,
-            solve_y,
-            button_width,
-            button_height,
-            button_border,
-            inactive_btn,
-            black,
-            'Visual Solve'
-        )
-
-        if reset_btn.collidepoint(pygame.mouse.get_pos()):
-            reset_btn = draw_button(
-                reset_x,
-                reset_y,
-                button_width,
-                button_height,
-                button_border,
-                active_btn,
-                black,
-                'Reset'
-            )
-        if solve_btn.collidepoint(pygame.mouse.get_pos()):
-            solve_btn = draw_button(
-                solve_x,
-                solve_y,
-                button_width,
-                button_height,
-                button_border,
-                active_btn,
-                black,
-                'Visual Solve'
-            )
-
-        hint_btn = draw_button(
-            hint_x,
-            hint_y,
-            button_width,
-            button_height,
-            button_border,
-            inactive_btn,
-            black,
-            'Hint'
-        )
-        if hint_btn.collidepoint(pygame.mouse.get_pos()):
-            hint_btn = draw_button(
-                hint_x,
-                hint_y,
-                button_width,
-                button_height,
-                button_border,
-                active_btn,
-                black,
-                'Hint'
-            )
-
         back_btn = draw_button(
             back_x,
             back_y,
@@ -816,6 +832,77 @@ def play():
                 textbox = text.get_rect(center=(solve_rect.center))
                 pygame.Surface.blit(
                     pygame.display.get_surface(), text, textbox)
+        else:
+            clock = pygame.time.get_ticks()
+            reset_btn = draw_button(
+                reset_x,
+                reset_y,
+                button_width,
+                button_height,
+                button_border,
+                inactive_btn,
+                black,
+                'Reset'
+            )
+            solve_btn = draw_button(
+                solve_x,
+                solve_y,
+                button_width,
+                button_height,
+                button_border,
+                inactive_btn,
+                black,
+                'Visual Solve'
+            )
+
+            if reset_btn.collidepoint(pygame.mouse.get_pos()):
+                reset_btn = draw_button(
+                    reset_x,
+                    reset_y,
+                    button_width,
+                    button_height,
+                    button_border,
+                    active_btn,
+                    black,
+                    'Reset'
+                )
+            if solve_btn.collidepoint(pygame.mouse.get_pos()):
+                solve_btn = draw_button(
+                    solve_x,
+                    solve_y,
+                    button_width,
+                    button_height,
+                    button_border,
+                    active_btn,
+                    black,
+                    'Visual Solve'
+                )
+
+            hint_btn = draw_button(
+                hint_x,
+                hint_y,
+                button_width,
+                button_height,
+                button_border,
+                inactive_btn,
+                black,
+                'Hint'
+            )
+            if hint_btn.collidepoint(pygame.mouse.get_pos()):
+                hint_btn = draw_button(
+                    hint_x,
+                    hint_y,
+                    button_width,
+                    button_height,
+                    button_border,
+                    active_btn,
+                    black,
+                    'Hint'
+                )
+        
+        font_t = pygame.font.SysFont('Arial', 35)
+        text_t = font_t.render('{}'.format(clock/1000), True, black)
+        pygame.Surface.blit(pygame.display.get_surface(), text_t, (clock_x, clock_y))
 
         pygame.display.flip()
 
