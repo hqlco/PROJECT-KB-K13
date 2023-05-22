@@ -16,7 +16,7 @@ button_border = 2
 width = cell_size * 9 + minor_grid_size * 6 + major_grid_size * 4 + buffer * 2
 height = cell_size * 9 + minor_grid_size * 6 + \
     major_grid_size * 4 + button_height + buffer * 3 + button_border * 2
-size = width*2, height*2
+size = width+1000, height+500
 white = 255, 255, 255
 black = 0, 0, 0
 gray = 200, 200, 200
@@ -34,35 +34,39 @@ lvl = None
 
 
 class RectCell(pygame.Rect):
-    def __init__(self, left, top, row, col):
+    def __init__(self, papan ,left, top, row, col):
         super().__init__(left, top, cell_size, cell_size)
         self.row = row
         self.col = col
+        self.papan = papan
 
 
-def create_cells():
-    cells = [[] for _ in range(9)]
-
-    row = 0
-    col = 0
-    left = buffer + major_grid_size
-    top = buffer + major_grid_size
-
-    while row < 9:
-        while col < 9:
-            cells[row].append(RectCell(left, top, row, col))
-
-            left += cell_size + minor_grid_size
-            if col != 0 and (col + 1) % 3 == 0:
-                left = left + major_grid_size - minor_grid_size
-            col += 1
-
-        top += cell_size + minor_grid_size
-        if row != 0 and (row + 1) % 3 == 0:
-            top = top + major_grid_size - minor_grid_size
-        left = buffer + major_grid_size
+def create_cells(data):
+    cells = []
+    p = 0
+    while p < len(data):
+        cells.append([])
+        row = 0
         col = 0
-        row += 1
+        left = buffer + major_grid_size
+        top = buffer + major_grid_size
+        while row < 9:
+            cells[p].append([])
+            while col < 9:
+                cells[p][row].append(RectCell(p,left, top, row, col))
+
+                left += cell_size + minor_grid_size
+                if col != 0 and (col + 1) % 3 == 0:
+                    left = left + major_grid_size - minor_grid_size
+                col += 1
+
+            top += cell_size + minor_grid_size
+            if row != 0 and (row + 1) % 3 == 0:
+                top = top + major_grid_size - minor_grid_size
+            left = buffer + major_grid_size
+            col = 0
+            row += 1
+        p+=1
 
     return cells
 
@@ -188,7 +192,7 @@ def fill_cells(cells, board):
                         text = font.render(
                             f'{board.board[p][row][col].value}', 1, red)
 
-                xpos, ypos = cells[row][col].center
+                xpos, ypos = cells[p][row][col].center
                 textbox = text.get_rect(center=(xpos, ypos))
                 pygame.Surface.blit(
                     pygame.display.get_surface(), text, textbox)
@@ -517,10 +521,9 @@ def play():
 
     dictConv(area)
     game = Sudoku(data, region_dict)
-
     # printdict(region_dict[0])
 
-    cells = create_cells()
+    cells = create_cells(data)
     active_cell = None
     solve_rect = pygame.Rect(
         buffer,
@@ -575,39 +578,40 @@ def play():
                     return
 
                 active_cell = None
-                for row in cells:
-                    for cell in row:
-                        if cell.collidepoint(mouse_pos):
-                            active_cell = cell
+                for p in cells:
+                    for row in p:
+                        for cell in row:
+                            if cell.collidepoint(mouse_pos):
+                                active_cell = cell
                 # ini harus diganti untuk multisudoku
-                if active_cell and not game.board[0][active_cell.row][active_cell.col].editable:
+                if active_cell and not game.board[active_cell.papan][active_cell.row][active_cell.col].editable:
                     active_cell = None
 
             if event.type == pygame.KEYUP:
                 if active_cell is not None:
                     # harus diganti ketika multisudoku
                     if event.key == pygame.K_0 or event.key == pygame.K_KP0:
-                        game.board[0][active_cell.row][active_cell.col].value = 0
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 0
                     if event.key == pygame.K_1 or event.key == pygame.K_KP1:
-                        game.board[0][active_cell.row][active_cell.col].value = 1
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 1
                     if event.key == pygame.K_2 or event.key == pygame.K_KP2:
-                        game.board[0][active_cell.row][active_cell.col].value = 2
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 2
                     if event.key == pygame.K_3 or event.key == pygame.K_KP3:
-                        game.board[0][active_cell.row][active_cell.col].value = 3
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 3
                     if event.key == pygame.K_4 or event.key == pygame.K_KP4:
-                        game.board[0][active_cell.row][active_cell.col].value = 4
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 4
                     if event.key == pygame.K_5 or event.key == pygame.K_KP5:
-                        game.board[0][active_cell.row][active_cell.col].value = 5
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 5
                     if event.key == pygame.K_6 or event.key == pygame.K_KP6:
-                        game.board[0][active_cell.row][active_cell.col].value = 6
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 6
                     if event.key == pygame.K_7 or event.key == pygame.K_KP7:
-                        game.board[0][active_cell.row][active_cell.col].value = 7
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 7
                     if event.key == pygame.K_8 or event.key == pygame.K_KP8:
-                        game.board[0][active_cell.row][active_cell.col].value = 8
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 8
                     if event.key == pygame.K_9 or event.key == pygame.K_KP9:
-                        game.board[0][active_cell.row][active_cell.col].value = 9
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = 9
                     if event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
-                        game.board[0][active_cell.row][active_cell.col].value = None
+                        game.board[active_cell.papan][active_cell.row][active_cell.col].value = None
 
         # GUI
         pygame.Surface.fill(pygame.display.get_surface(), white)
