@@ -898,6 +898,9 @@ def menu():
                 if play_btn.collidepoint(mouse_pos):
                     screen = "level"
                     return
+                if credit_btn.collidepoint(mouse_pos):
+                    screen = "credit"
+                    return
 
         # GUI
         pygame.Surface.fill(pygame.display.get_surface(), white)
@@ -923,14 +926,103 @@ def menu():
                 'Play'
             )
 
+        credit_btn = draw_button(
+            300 / 2 - (button_width + button_border) / 2,
+            height / 2 + (button_height + button_border),
+            button_width,
+            button_height,
+            button_border,
+            inactive_btn,
+            black,
+            'Credit'
+        )
+        if credit_btn.collidepoint(pygame.mouse.get_pos()):
+            credit_btn = draw_button(
+                300 / 2 - (button_width + button_border) / 2,
+                height / 2 + (button_height + button_border),
+                button_width,
+                button_height,
+                button_border,
+                active_btn,
+                black,
+                'Credit'
+            )
+
         pygame.display.flip()
 
+
+def display_text(text, pos, font, color):
+    collection = [word.split(' ') for word in text.splitlines()]
+    space = font.size(' ')[0]
+    x,y = pos
+    for lines in collection:
+        for words in lines:
+            word_surface = font.render(words, True, color)
+            word_width , word_height = word_surface.get_size()
+            if x + word_width >= 800:
+                x = pos[0]
+                y += word_height
+            pygame.Surface.blit(pygame.display.get_surface(), word_surface, (x,y))
+            x += word_width + space
+        x = pos[0]
+        y += word_height
+
+def credit():
+    global screen, run
+    pygame.display.set_mode((width+100, height))
+    while True:
+
+        # Controller
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                return
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                mouse_pos = pygame.mouse.get_pos()
+
+                if back_btn.collidepoint(mouse_pos):
+                    screen = "menu"
+                    return
+        # GUI
+        pygame.Surface.fill(pygame.display.get_surface(), white)
+
+        back_btn = draw_button(
+            (width+100) / 2 - (button_width + button_border) / 2,
+            height - (button_height + button_border) * 3,
+            button_width,
+            button_height,
+            button_border,
+            inactive_btn,
+            black,
+            'Back'
+        )
+        if back_btn.collidepoint(pygame.mouse.get_pos()):
+            back_btn = draw_button(
+                (width+100) / 2 - (button_width + button_border) / 2,
+                height - (button_height + button_border) * 3,
+                button_width,
+                button_height,
+                button_border,
+                active_btn,
+                black,
+                'Back'
+            )
+        font = pygame.font.SysFont('Comic Sans', 25)
+        text = "                          Contributors:\n\nMoh Rosy Haqqy Aminy : 5025211012 : hqlco\n\n  M. Hafidh Rosyadi : 5025211013 : Hfdrsyd\n\n   Hammuda Arsyad : 5025211146 : H-mD"
+        # textbox = text.get_rect(center=(txtbox.center))
+        # pygame.Surface.blit(pygame.display.get_surface(), text, textbox)
+        display_text(text, (35, 40), font, black)
+
+        pygame.display.flip()
 
 def run():
     global screen, run
     while run:
         if screen == "menu":
             menu()
+        elif screen == "credit":
+            credit()
         elif screen == "level":
             level()
         elif screen == "play":
