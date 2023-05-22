@@ -212,7 +212,12 @@ def fill_cells(cells, board):
                     else:
                         text = font.render(
                             f'{board.board[p][row][col].value}', 1, red)
-
+                    if(p == 1 and find_region(region_dict[1],row,col) == "region_1" and not board.check_move(board.board[0][row+6][col+6], board.board[0][row+6][col+6].value) and len(board.board)>1):
+                        text = font.render(
+                            f'{board.board[p][row][col].value}', 1, red)
+                    if(p == 0 and find_region(region_dict[0],row,col) == "region_9" and len(board.board)>1):
+                        text = font.render(
+                            f'{board.board[p][row][col].value}', 1, white)
                 xpos, ypos = cells[p][row][col].center
                 textbox = text.get_rect(center=(xpos, ypos))
                 pygame.Surface.blit(
@@ -701,7 +706,6 @@ def play():
     dictConv(area)
     game = Sudoku(data, region_dict)
     # printdict(region_dict[0])
-
     cells = create_cells(data)
     active_cell = None
     solve_rect = pygame.Rect(
@@ -798,7 +802,10 @@ def play():
                         game.board[active_cell.papan][active_cell.row][active_cell.col].value = 9
                     if event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
                         game.board[active_cell.papan][active_cell.row][active_cell.col].value = None
-
+                        if active_cell.papan == 1 and game.board[active_cell.papan][active_cell.row][active_cell.col].value == None and find_region(region_dict[1],active_cell.row,active_cell.col) == "region_1":
+                            game.board[0][active_cell.row+6][active_cell.col+6].value = None
+                    if active_cell.papan == 1 and game.board[active_cell.papan][active_cell.row][active_cell.col].value != None and find_region(region_dict[1],active_cell.row,active_cell.col) == "region_1":
+                        game.board[0][active_cell.row+6][active_cell.col+6].value = game.board[active_cell.papan][active_cell.row][active_cell.col].value
         # GUI
         pygame.Surface.fill(pygame.display.get_surface(), white)
         draw_board(active_cell, cells, game, area)
