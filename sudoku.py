@@ -15,7 +15,7 @@ button_width = 125
 button_border = 2
 width = cell_size * 9 + minor_grid_size * 6 + major_grid_size * 4 + buffer * 2
 height = cell_size * 9 + minor_grid_size * 6 + \
-         major_grid_size * 4 + button_height + buffer * 3 + button_border * 2
+    major_grid_size * 4 + button_height + buffer * 3 + button_border * 2
 size = width, height
 white = 255, 255, 255
 black = 0, 0, 0
@@ -86,20 +86,20 @@ def draw_grid(area):
             for j in range(8):
                 if area[p][i][j] == area[p][i][j + 1]:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
-                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
-                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
     # sumbu X
     for p in range(len(area)):
         for i in range(8):
             for j in range(9):
                 if area[p][i][j] == area[p][i + 1][j]:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
-                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
-                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
 
 # lvl 2
@@ -121,20 +121,20 @@ def draw_grid_lvl2(area):
             for j in range(8):
                 if area[p][i][j] == area[p][i][j + 1]:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
-                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j + 1], jarak[i]),
-                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
     # sumbu X
     for p in range(len(area)):
         for i in range(8):
             for j in range(9):
                 if area[p][i][j] == area[p][i + 1][j]:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
-                                    (jarak[j + 1], jarak[i + 1]), minor_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), minor_grid_size)
                 else:
                     pygame.draw.line(pygame.display.get_surface(), black, (jarak[j], jarak[i + 1]),
-                                    (jarak[j + 1], jarak[i + 1]), major_grid_size)
+                                     (jarak[j + 1], jarak[i + 1]), major_grid_size)
 
 
 # lvl 3
@@ -176,7 +176,8 @@ def fill_cells(cells, board):
 
                 if not board.board[p][row][col].editable:
                     font.bold = True
-                    text = font.render(f'{board.board[p][row][col].value}', 1, black)
+                    text = font.render(
+                        f'{board.board[p][row][col].value}', 1, black)
 
                 else:
                     font.bold = False
@@ -189,11 +190,12 @@ def fill_cells(cells, board):
 
                 xpos, ypos = cells[row][col].center
                 textbox = text.get_rect(center=(xpos, ypos))
-                pygame.Surface.blit(pygame.display.get_surface(), text, textbox)
+                pygame.Surface.blit(
+                    pygame.display.get_surface(), text, textbox)
 
 
 def draw_button(left, top, width, height, border, color, border_color, text):
-    pygame.draw.rect(pygame.display.get_surface(), border_color, 
+    pygame.draw.rect(pygame.display.get_surface(), border_color,
                      (left, top, width + border * 2, height + border * 2))
 
     button = pygame.Rect(
@@ -248,7 +250,7 @@ def printdict(dict):
         print(region, ":", coordinates)
 
 
-def find_region(dict,i, j):
+def find_region(dict, i, j):
     for v, d in dict.items():
         if (i, j) in d:
             return v
@@ -261,7 +263,7 @@ def check_sudoku(sudoku):
     r = []
     c = []
     b = []
-    
+
     for p in range(len(region_dict)):
         row_sets = [set() for _ in range(9)]
         col_sets = [set() for _ in range(9)]
@@ -274,12 +276,13 @@ def check_sudoku(sudoku):
                 cntRow = 0
                 cntCol = 0
                 if p > 0 and regional_points == 1 and value in r[p-1][row+6]:
-                    cntRow+=1
+                    cntRow += 1
                 if p > 0 and regional_points == 1 and value in r[p-1][col+6]:
-                    cntCol+=1
+                    cntCol += 1
                 if value in row_sets[row] or value in col_sets[col] or cntRow > 1 or cntCol > 1:
                     return False
-                box_sets[region_key] = set() if box_sets[region_key] is None else box_sets[region_key]
+                box_sets[region_key] = set(
+                ) if box_sets[region_key] is None else box_sets[region_key]
                 if value in box_sets[region_key]:
                     return False
                 row_sets[row].add(value)
@@ -291,7 +294,6 @@ def check_sudoku(sudoku):
     return True
 
 
-
 def play():
     global screen, run, lvl
 
@@ -300,164 +302,164 @@ def play():
         if num == 0:
             data = [
                 [
-                [0, 0, 0, 9, 0, 0, 0, 3, 0],
-                [3, 0, 6, 0, 2, 0, 0, 4, 0],
-                [2, 0, 4, 0, 0, 3, 1, 0, 6],
-                [0, 7, 0, 0, 5, 1, 0, 8, 0],
-                [0, 3, 1, 0, 6, 0, 0, 5, 7],
-                [5, 0, 9, 0, 0, 0, 6, 0, 0],
-                [4, 1, 0, 0, 0, 2, 0, 7, 8],
-                [7, 6, 3, 0, 0, 5, 4, 0, 0],
-                [9, 2, 8, 0, 0, 4, 0, 0, 1]
+                    [0, 0, 0, 9, 0, 0, 0, 3, 0],
+                    [3, 0, 6, 0, 2, 0, 0, 4, 0],
+                    [2, 0, 4, 0, 0, 3, 1, 0, 6],
+                    [0, 7, 0, 0, 5, 1, 0, 8, 0],
+                    [0, 3, 1, 0, 6, 0, 0, 5, 7],
+                    [5, 0, 9, 0, 0, 0, 6, 0, 0],
+                    [4, 1, 0, 0, 0, 2, 0, 7, 8],
+                    [7, 6, 3, 0, 0, 5, 4, 0, 0],
+                    [9, 2, 8, 0, 0, 4, 0, 0, 1]
                 ]
             ]
             area = [
                 [
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9]
                 ]
             ]
         elif num == 1:
             data = [
                 [
-                [0, 0, 0, 9, 0, 0, 0, 3, 0],
-                [3, 0, 6, 0, 2, 0, 0, 4, 0],
-                [2, 0, 4, 0, 0, 3, 1, 0, 6],
-                [0, 7, 0, 0, 5, 1, 0, 8, 0],
-                [0, 3, 1, 0, 6, 0, 0, 5, 7],
-                [5, 0, 9, 0, 0, 0, 6, 0, 0],
-                [4, 1, 0, 0, 0, 2, 0, 7, 8],
-                [7, 6, 3, 0, 0, 5, 4, 0, 0],
-                [9, 2, 8, 0, 0, 4, 0, 0, 1]
+                    [0, 9, 5, 0, 7, 8, 3, 4, 2],
+                    [0, 0, 0, 0, 4, 1, 0, 6, 0],
+                    [4, 6, 7, 0, 3, 9, 5, 0, 1],
+                    [0, 8, 0, 4, 0, 0, 0, 0, 0],
+                    [5, 0, 6, 0, 0, 0, 2, 9, 0],
+                    [0, 0, 0, 0, 9, 0, 8, 0, 5],
+                    [8, 0, 4, 9, 0, 0, 0, 0, 3],
+                    [0, 0, 0, 0, 5, 0, 0, 2, 0],
+                    [0, 5, 1, 3, 6, 0, 0, 0, 0]
                 ]
             ]
             area = [
                 [
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9]
                 ]
             ]
         else:
             data = [
                 [
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    [3, 7, 4, 2, 0, 8, 5, 0, 1],
+                    [0, 0, 5, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 9, 0, 0, 1, 0, 8, 0, 0],
+                    [2, 0, 8, 9, 0, 0, 7, 0, 5],
+                    [7, 5, 0, 0, 2, 4, 1, 9, 0],
+                    [5, 0, 0, 7, 0, 2, 9, 0, 0],
+                    [0, 0, 9, 3, 8, 1, 2, 0, 7],
+                    [0, 0, 7, 4, 0, 9, 6, 1, 0]
                 ]
             ]
             area = [
                 [
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [1, 1, 1, 2, 2, 2, 3, 3, 3],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [4, 4, 4, 5, 5, 5, 6, 6, 6],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9],
-                [7, 7, 7, 8, 8, 8, 9, 9, 9]
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [1, 1, 1, 2, 2, 2, 3, 3, 3],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [4, 4, 4, 5, 5, 5, 6, 6, 6],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9],
+                    [7, 7, 7, 8, 8, 8, 9, 9, 9]
                 ]
             ]
     elif lvl == 2:
         if num == 0:
             data = [
                 [
-                [0, 2, 0, 0, 0, 6, 8, 0, 0],
-                [4, 8, 0, 0, 0, 7, 6, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 4, 0],
-                [8, 0, 7, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 8, 6, 4, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 3, 0, 8],
-                [0, 1, 0, 0, 4, 0, 0, 0, 0],
-                [0, 0, 2, 5, 0, 0, 0, 7, 9],
-                [0, 0, 8, 9, 0, 0, 0, 3, 0]
+                    [7, 0, 0, 8, 2, 3, 0, 9, 0],
+                    [0, 0, 3, 0, 0, 0, 0, 0, 8],
+                    [0, 0, 0, 9, 0, 6, 0, 5, 0],
+                    [2, 0, 0, 0, 1, 0, 0, 0, 0],
+                    [0, 0, 1, 0, 0, 0, 5, 0, 0],
+                    [0, 0, 0, 0, 5, 0, 0, 0, 2],
+                    [0, 7, 0, 1, 0, 8, 0, 0, 0],
+                    [1, 0, 0, 0, 0, 0, 2, 0, 0],
+                    [0, 6, 0, 2, 7, 5, 0, 0, 4]
                 ]
             ]
             area = [
                 [
-                [1, 2, 2, 2, 3, 3, 3, 3, 3],
-                [1, 2, 2, 2, 2, 4, 4, 3, 3],
-                [1, 5, 2, 2, 4, 4, 4, 3, 3],
-                [1, 5, 5, 4, 4, 4, 6, 6, 6],
-                [1, 5, 5, 5, 5, 4, 6, 6, 6],
-                [1, 7, 7, 5, 5, 6, 6, 8, 6],
-                [1, 7, 7, 7, 7, 8, 8, 8, 8],
-                [1, 9, 7, 7, 7, 8, 8, 8, 8],
-                [1, 9, 9, 9, 9, 9, 9, 9, 9]
+                    [1, 1, 1, 1, 3, 3, 3, 3, 3],
+                    [2, 1, 1, 1, 3, 3, 3, 4, 4],
+                    [2, 1, 2, 1, 2, 5, 3, 4, 4],
+                    [2, 2, 2, 2, 2, 5, 5, 4, 4],
+                    [7, 7, 5, 5, 5, 5, 5, 4, 4],
+                    [7, 7, 7, 6, 6, 5, 6, 4, 6],
+                    [7, 7, 7, 8, 6, 6, 6, 6, 6],
+                    [7, 8, 8, 8, 9, 9, 9, 9, 9],
+                    [8, 8, 8, 8, 8, 9, 9, 9, 9]
                 ]
             ]
         elif num == 1:
             data = [
                 [
-                [0, 2, 0, 0, 0, 6, 8, 0, 0],
-                [4, 8, 0, 0, 0, 7, 6, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 4, 0],
-                [8, 0, 7, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 8, 6, 4, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 3, 0, 8],
-                [0, 1, 0, 0, 4, 0, 0, 0, 0],
-                [0, 0, 2, 5, 0, 0, 0, 7, 9],
-                [0, 0, 8, 9, 0, 0, 0, 3, 0]
+                    [5, 0, 0, 7, 0, 0, 0, 9, 2],
+                    [0, 0, 0, 0, 3, 0, 1, 0, 0],
+                    [0, 8, 6, 0, 0, 0, 0, 0, 7],
+                    [0, 0, 0, 8, 9, 0, 0, 0, 0],
+                    [1, 2, 0, 0, 0, 0, 0, 3, 5],
+                    [0, 0, 0, 0, 4, 1, 0, 0, 0],
+                    [7, 0, 0, 0, 0, 0, 3, 8, 0],
+                    [0, 0, 3, 0, 1, 0, 0, 0, 0],
+                    [8, 5, 0, 0, 0, 9, 0, 0, 1]
                 ]
             ]
             area = [
                 [
-                [1, 2, 2, 2, 3, 3, 3, 3, 3],
-                [1, 2, 2, 2, 2, 4, 4, 3, 3],
-                [1, 5, 2, 2, 4, 4, 4, 3, 3],
-                [1, 5, 5, 4, 4, 4, 6, 6, 6],
-                [1, 5, 5, 5, 5, 4, 6, 6, 6],
-                [1, 7, 7, 5, 5, 6, 6, 8, 6],
-                [1, 7, 7, 7, 7, 8, 8, 8, 8],
-                [1, 9, 7, 7, 7, 8, 8, 8, 8],
-                [1, 9, 9, 9, 9, 9, 9, 9, 9]
+                    [1, 1, 6, 6, 7, 7, 8, 8, 8],
+                    [1, 1, 6, 6, 6, 7, 7, 8, 8],
+                    [1, 1, 6, 5, 6, 7, 7, 8, 8],
+                    [1, 5, 6, 5, 7, 7, 9, 8, 8],
+                    [1, 5, 6, 5, 7, 9, 9, 9, 9],
+                    [1, 5, 5, 5, 5, 9, 9, 9, 4],
+                    [2, 2, 2, 2, 3, 4, 4, 9, 4],
+                    [2, 2, 2, 3, 3, 3, 4, 4, 4],
+                    [2, 2, 3, 3, 3, 3, 3, 4, 4]
                 ]
             ]
         else:
             data = [
                 [
-                [0, 2, 0, 0, 0, 6, 8, 0, 0],
-                [4, 8, 0, 0, 0, 7, 6, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 4, 0],
-                [8, 0, 7, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 8, 6, 4, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 3, 0, 8],
-                [0, 1, 0, 0, 4, 0, 0, 0, 0],
-                [0, 0, 2, 5, 0, 0, 0, 7, 9],
-                [0, 0, 8, 9, 0, 0, 0, 3, 0]
+                    [0, 2, 0, 0, 0, 6, 8, 0, 0],
+                    [4, 8, 0, 0, 0, 7, 6, 0, 0],
+                    [0, 0, 0, 0, 1, 0, 0, 4, 0],
+                    [8, 0, 7, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 8, 6, 4, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 3, 0, 8],
+                    [0, 1, 0, 0, 4, 0, 0, 0, 0],
+                    [0, 0, 2, 5, 0, 0, 0, 7, 9],
+                    [0, 0, 8, 9, 0, 0, 0, 3, 0]
                 ]
             ]
             area = [
                 [
-                [1, 2, 2, 2, 3, 3, 3, 3, 3],
-                [1, 2, 2, 2, 2, 4, 4, 3, 3],
-                [1, 5, 2, 2, 4, 4, 4, 3, 3],
-                [1, 5, 5, 4, 4, 4, 6, 6, 6],
-                [1, 5, 5, 5, 5, 4, 6, 6, 6],
-                [1, 7, 7, 5, 5, 6, 6, 8, 6],
-                [1, 7, 7, 7, 7, 8, 8, 8, 8],
-                [1, 9, 7, 7, 7, 8, 8, 8, 8],
-                [1, 9, 9, 9, 9, 9, 9, 9, 9]
+                    [1, 2, 2, 2, 3, 3, 3, 3, 3],
+                    [1, 2, 2, 2, 2, 4, 4, 3, 3],
+                    [1, 5, 2, 2, 4, 4, 4, 3, 3],
+                    [1, 5, 5, 4, 4, 4, 6, 6, 6],
+                    [1, 5, 5, 5, 5, 4, 6, 6, 6],
+                    [1, 7, 7, 5, 5, 6, 6, 8, 6],
+                    [1, 7, 7, 7, 7, 8, 8, 8, 8],
+                    [1, 9, 7, 7, 7, 8, 8, 8, 8],
+                    [1, 9, 9, 9, 9, 9, 9, 9, 9]
                 ]
             ]
 
@@ -657,7 +659,8 @@ def play():
                 font = pygame.font.Font(None, 36)
                 text = font.render('Solved!', 1, green)
                 textbox = text.get_rect(center=(solve_rect.center))
-                pygame.Surface.blit(pygame.display.get_surface() ,text, textbox)
+                pygame.Surface.blit(
+                    pygame.display.get_surface(), text, textbox)
 
         pygame.display.flip()
 
