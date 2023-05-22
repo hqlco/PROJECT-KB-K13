@@ -356,13 +356,21 @@ def check_sudoku(sudoku):
         b.append(box_sets)
     return True
 
+def hint(game, len_p, len_r, len_c):
+    if len_p > 1:
+        p = random.randrange(0, len_p-1)
+    else:
+        p = len_p-1
+    r = random.randrange(0, len_r-1)
+    c = random.randrange(0, len_c-1)
+    val = random.randrange(1, 9)
+    game.board[p][r][c].value = val
 
 def play():
     global screen, run, lvl
-    xtra = 0
     num = random.randint(0, 2)
     if lvl == 1:
-        pygame.display.set_mode(size)
+        pygame.display.set_mode((width + button_width + button_border*2 + buffer*2, 472 + buffer))
         if num == 0:
             data = [
                 [
@@ -445,7 +453,7 @@ def play():
                 ]
             ]
     elif lvl == 2:
-        pygame.display.set_mode(size)
+        pygame.display.set_mode((width + button_width + button_border*2 + buffer*2, 472 + buffer))
         if num == 0:
             data = [
                 [
@@ -529,8 +537,7 @@ def play():
             ]
 
     elif lvl == 3:
-        xtra = 316
-        pygame.display.set_mode((width+xtra, height+xtra))
+        pygame.display.set_mode((width+316, height+316))
         data = [
             [
                 [6, 0, 3, 7, 0, 5, 9, 0, 8],
@@ -595,6 +602,30 @@ def play():
         button_height + button_border * 2
     )
 
+    if lvl != 3:
+        btn_x = width + buffer
+        reset_x = btn_x
+        solve_x = btn_x
+        hint_x = btn_x
+        back_x = btn_x
+
+        reset_y = buffer
+        solve_y = button_height + button_border*2 + buffer*3
+        hint_y = button_height*2 + button_border*4 + buffer*5
+        back_y = button_height*3 + button_border*6 + buffer*7
+    else:
+        btn_x = (width+316)/2 - (button_width*4 + button_border*8 + buffer*6)/2
+        reset_x = btn_x
+        solve_x = btn_x + (button_width + button_border*2 + buffer*2)
+        hint_x = btn_x + (button_width*2 + button_border*4 + buffer*4)
+        back_x = btn_x + (button_width*3 + button_border*6 + buffer*6)
+
+        btn_y = (height+316) - (button_height + button_border*2 + buffer)
+        reset_y = btn_y
+        solve_y = btn_y
+        hint_y = btn_y
+        back_y = btn_y
+
     while True:
 
         # Controller
@@ -615,7 +646,7 @@ def play():
                 #     draw_board(active_cell, cells, game, area)
                 #     reset_btn = draw_button(
                 #         width - buffer - button_border*2 - button_width,
-                #         height - button_height - button_border*2 - buffer + xtra,
+                #         height - button_height - button_border*2 - buffer,
                 #         button_width,
                 #         button_height,
                 #         button_border,
@@ -625,7 +656,7 @@ def play():
                 #     )
                 #     solve_btn = draw_button(
                 #         width - buffer*2 - button_border*4 - button_width*2,
-                #         height - button_height - button_border*2 - buffer + xtra,
+                #         height - button_height - button_border*2 - buffer,
                 #         button_width,
                 #         button_height,
                 #         button_border,
@@ -639,6 +670,9 @@ def play():
                 if back_btn.collidepoint(mouse_pos):
                     screen = "level"
                     return
+
+                if hint_btn.collidepoint(mouse_pos):
+                    hint(game, len(data), len(data[0]), len(data[0][0]))
 
                 active_cell = None
                 for p in cells:
@@ -679,9 +713,10 @@ def play():
         # GUI
         pygame.Surface.fill(pygame.display.get_surface(), white)
         draw_board(active_cell, cells, game, area)
+
         reset_btn = draw_button(
-            width - buffer - button_border * 2 - button_width,
-            height - button_height - button_border * 2 - buffer + xtra,
+            reset_x,
+            reset_y,
             button_width,
             button_height,
             button_border,
@@ -690,8 +725,8 @@ def play():
             'Reset'
         )
         solve_btn = draw_button(
-            width - buffer * 2 - button_border * 4 - button_width * 2,
-            height - button_height - button_border * 2 - buffer + xtra,
+            solve_x,
+            solve_y,
             button_width,
             button_height,
             button_border,
@@ -702,8 +737,8 @@ def play():
 
         if reset_btn.collidepoint(pygame.mouse.get_pos()):
             reset_btn = draw_button(
-                width - buffer - button_border * 2 - button_width,
-                height - button_height - button_border * 2 - buffer + xtra,
+                reset_x,
+                reset_y,
                 button_width,
                 button_height,
                 button_border,
@@ -713,8 +748,8 @@ def play():
             )
         if solve_btn.collidepoint(pygame.mouse.get_pos()):
             solve_btn = draw_button(
-                width - buffer * 2 - button_border * 4 - button_width * 2,
-                height - button_height - button_border * 2 - buffer + xtra,
+                solve_x,
+                solve_y,
                 button_width,
                 button_height,
                 button_border,
@@ -723,9 +758,31 @@ def play():
                 'Visual Solve'
             )
 
+        hint_btn = draw_button(
+            hint_x,
+            hint_y,
+            button_width,
+            button_height,
+            button_border,
+            inactive_btn,
+            black,
+            'Hint'
+        )
+        if hint_btn.collidepoint(pygame.mouse.get_pos()):
+            hint_btn = draw_button(
+                hint_x,
+                hint_y,
+                button_width,
+                button_height,
+                button_border,
+                active_btn,
+                black,
+                'Hint'
+            )
+
         back_btn = draw_button(
-            width - buffer * 3 - button_border * 6 - button_width * 3,
-            height - button_height - button_border * 2 - buffer + xtra,
+            back_x,
+            back_y,
             button_width,
             button_height,
             button_border,
@@ -735,8 +792,8 @@ def play():
         )
         if back_btn.collidepoint(pygame.mouse.get_pos()):
             back_btn = draw_button(
-                width - buffer * 3 - button_border * 6 - button_width * 3,
-                height - button_height - button_border * 2 - buffer + xtra,
+                back_x,
+                back_y,
                 button_width,
                 button_height,
                 button_border,
@@ -1010,8 +1067,6 @@ def credit():
             )
         font = pygame.font.SysFont('Comic Sans', 25)
         text = "                          Contributors:\n\nMoh Rosy Haqqy Aminy : 5025211012 : hqlco\n\n  M. Hafidh Rosyadi : 5025211013 : Hfdrsyd\n\n   Hammuda Arsyad : 5025211146 : H-mD"
-        # textbox = text.get_rect(center=(txtbox.center))
-        # pygame.Surface.blit(pygame.display.get_surface(), text, textbox)
         display_text(text, (35, 40), font, black)
 
         pygame.display.flip()
