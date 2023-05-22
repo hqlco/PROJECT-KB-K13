@@ -742,6 +742,8 @@ def play():
         hint_y = btn_y
         back_y = btn_y
         clock_y = 161 - ((161-109)/2)
+    
+    clock_start = pygame.time.get_ticks()
 
     while True:
 
@@ -840,7 +842,7 @@ def play():
                 pygame.Surface.blit(
                     pygame.display.get_surface(), text, textbox)
         else:
-            clock = pygame.time.get_ticks()
+            clock = pygame.time.get_ticks() - clock_start
             reset_btn = draw_button(
                 reset_x,
                 reset_y,
