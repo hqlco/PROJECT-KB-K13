@@ -141,11 +141,11 @@ class Sudoku:
             if not (cell.papan == 0 and cell.Rarea == "region_9") or not (cell.papan == 1 and cell.Rarea == "region_1"):
                 if not self.check_move(cell, val):
                     continue
-            if (cell.papan == 0 and cell.Rarea == "region_9"):
+            if (cell.papan == 0 and cell.Rarea == "region_9") and len(self.board)>1:
                 if not (self.check_move(cell, val) and self.check_move(self.board[1][cell.row-6][cell.col-6],val)):
                     continue
                 self.board[1][cell.row-6][cell.col-6].value = val
-            if (cell.papan == 1 and cell.Rarea == "region_1"):
+            if (cell.papan == 1 and cell.Rarea == "region_1")and len(self.board)>1:
                 if not (self.check_move(cell, val) and self.check_move(self.board[0][cell.row+6][cell.col+6],val)):
                     continue
                 self.board[1][cell.row+6][cell.col-+6] = val
@@ -153,9 +153,9 @@ class Sudoku:
             
             if self.solve():
                 return True
-            if (cell.papan == 0 and cell.Rarea == "region_9"):
+            if (cell.papan == 0 and cell.Rarea == "region_9") and len(self.board)>1:
                 self.board[1][cell.row-6][cell.col-6].value = None
-            if (cell.papan == 1 and cell.Rarea == "region_1"):
+            if (cell.papan == 1 and cell.Rarea == "region_1") and len(self.board)>1:
                 self.board[0][cell.row+6][cell.col+6].value = None
             cell.value = None
 
