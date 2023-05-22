@@ -2,8 +2,8 @@
 import pygame
 import random
 import sys
+import time
 from solver import Sudoku
-import random
 
 pygame.init()
 cell_size = 50
@@ -16,7 +16,7 @@ button_border = 2
 width = cell_size * 9 + minor_grid_size * 6 + major_grid_size * 4 + buffer * 2
 height = cell_size * 9 + minor_grid_size * 6 + \
     major_grid_size * 4 + button_height + buffer * 3 + button_border * 2
-size = width+1000, height+500
+size = width, height
 white = 255, 255, 255
 black = 0, 0, 0
 gray = 200, 200, 200
@@ -48,12 +48,12 @@ def create_cells(data):
         cells.append([])
         row = 0
         col = 0
-        left = buffer + major_grid_size
-        top = buffer + major_grid_size
+        left = buffer + major_grid_size + (p*310)
+        top = buffer + major_grid_size  + (p*310)
         while row < 9:
             cells[p].append([])
             while col < 9:
-                cells[p][row].append(RectCell(p,left, top, row, col))
+                cells[p][row].append(RectCell(p, left, top, row, col))
 
                 left += cell_size + minor_grid_size
                 if col != 0 and (col + 1) % 3 == 0:
@@ -63,7 +63,7 @@ def create_cells(data):
             top += cell_size + minor_grid_size
             if row != 0 and (row + 1) % 3 == 0:
                 top = top + major_grid_size - minor_grid_size
-            left = buffer + major_grid_size
+            left = buffer + major_grid_size + (p*310)
             col = 0
             row += 1
         p+=1
@@ -142,31 +142,51 @@ def draw_grid_lvl2(area):
 
 
 # lvl 3
-def draw_grid_lvl3():
-    lines_drawn = 0
-    pos = buffer + major_grid_size + cell_size
-    # draw grid with jigsaw pattern
-
-    # pygame.draw.line(pygame.display.get_surface(), black, (pos, buffer),
-    #                  (pos, width-buffer-1), minor_grid_size)
-    # pygame.draw.line(pygame.display.get_surface(), black, (buffer, pos), (width-buffer-1, pos), minor_grid_size)
-    while lines_drawn < 6:
-        pygame.draw.line(pygame.display.get_surface(), black, (pos, buffer),
-                         (pos, width - buffer - 1), minor_grid_size)
-        pygame.draw.line(pygame.display.get_surface(), black, (buffer, pos),
-                         (width - buffer - 1, pos), minor_grid_size)
-
-        lines_drawn += 1
-
-        pos += cell_size + minor_grid_size
-        if lines_drawn % 2 == 0:
-            pos += cell_size + major_grid_size
-
-    for pos in range(buffer + major_grid_size // 2, width, cell_size * 3 + minor_grid_size * 2 + major_grid_size):
-        pygame.draw.line(pygame.display.get_surface(), black, (pos, buffer),
-                         (pos, width - buffer - 1), major_grid_size)
-        pygame.draw.line(pygame.display.get_surface(), black, (buffer, pos),
-                         (width - buffer - 1, pos), major_grid_size)
+def draw_grid_lvl3(area):
+    # draw BG
+    # Diagonal
+    pygame.draw.line(pygame.display.get_surface(), black, (5, 6),
+                    (472, 6), 3)
+    pygame.draw.line(pygame.display.get_surface(), black, (471, 316),
+                    (472+316, 316), 3)
+    pygame.draw.line(pygame.display.get_surface(), black, (5, 471),
+                    (316, 471), 3)
+    pygame.draw.line(pygame.display.get_surface(), black, (316, 471+316),
+                    (472+316, 471+316), 3)
+    # Horizontal
+    pygame.draw.line(pygame.display.get_surface(), black, (6, 5),
+                    (6, 472), 3)
+    pygame.draw.line(pygame.display.get_surface(), black, (316, 471),
+                    (316, 472+316), 3)
+    pygame.draw.line(pygame.display.get_surface(), black, (471, 5),
+                    (471, 316), 3)
+    pygame.draw.line(pygame.display.get_surface(), black, (471+316, 316),
+                    (471+316, 472+316), 3)
+    
+    jarak = [6, 58, 109, 161, 213, 264, 316, 368, 419, 471, 523, 574, 626, 678, 729, 781]
+    # 6, 58, 109, 161, 213, 264, 316, 368, 419, 471, 523, 574, 626, 678, 729, 781
+    #  52   51  52   52    51   52   52  51   52   52   51  52   52    51   52
+    # loop 9 times
+    # sumbu Y
+    for p in range(len(area)):
+        for i in range(9):
+            for j in range(8):
+                if area[p][i][j] == area[p][i][j + 1]:
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[(j + 1)+(p*6)], jarak[i+(p*6)]),
+                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), minor_grid_size)
+                else:
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[(j + 1)+(p*6)], jarak[i+(p*6)]),
+                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), major_grid_size)
+    # sumbu X
+    for p in range(len(area)):
+        for i in range(8):
+            for j in range(9):
+                if area[p][i][j] == area[p][i + 1][j]:
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j+(p*6)], jarak[(i + 1)+(p*6)]),
+                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), minor_grid_size)
+                else:
+                    pygame.draw.line(pygame.display.get_surface(), black, (jarak[j+(p*6)], jarak[(i + 1)+(p*6)]),
+                                    (jarak[(j + 1)+(p*6)], jarak[(i + 1)+(p*6)]), major_grid_size)
 
 
 def fill_cells(cells, board):
@@ -226,7 +246,7 @@ def draw_board(active_cell, cells, game, area):
     elif (lvl == 2):
         draw_grid_lvl2(area)
     elif (lvl == 3):
-        draw_grid_lvl3()
+        draw_grid_lvl3(area)
     if active_cell is not None:
         pygame.draw.rect(pygame.display.get_surface(), gray, active_cell)
 
@@ -259,6 +279,45 @@ def find_region(dict, i, j):
         if (i, j) in d:
             return v
 
+# def visual_solve(game, cells, area):
+#     cell = game.get_empty_cell()
+
+#     if not cell:
+#         return True
+
+#     for p in range(len(area)):
+#         for val in range(1, 10):
+#             for event in pygame.event.get():
+#                 if event.type == pygame.QUIT:
+#                     sys.exit()
+
+#             cell.value = val
+
+#             pygame.Surface.fill(pygame.display.get_surface(), white)
+#             draw_board(None, cells, game, area)
+#             cell_rect = cells[p][cell.row][cell.col]
+#             pygame.draw.rect(pygame.display.get_surface(), red, cell_rect, 5)
+#             pygame.display.update([cell_rect])
+#             time.sleep(0.05)
+
+#             if not game.check_move(cell, val):
+#                 cell.value = None
+#                 continue
+
+#             pygame.Surface.fill(pygame.display.get_surface(), white)
+#             pygame.draw.rect(pygame.display.get_surface(), green, cell_rect, 5)
+#             draw_board(None, cells, game, area)
+#             pygame.display.update([cell_rect])
+#             if visual_solve(game, cells, area):
+#                 return True
+
+#             cell.value = None
+
+#     pygame.Surface.fill(pygame.display.get_surface(), white)
+#     pygame.draw.rect(pygame.display.get_surface(), white, cell_rect, 5)
+#     draw_board(None, cells, game, area)
+#     pygame.display.update([cell_rect])
+#     return False
 
 def check_sudoku(sudoku):
     if sudoku.get_empty_cell():
@@ -300,9 +359,10 @@ def check_sudoku(sudoku):
 
 def play():
     global screen, run, lvl
-
+    xtra = 0
     num = random.randint(0, 2)
     if lvl == 1:
+        pygame.display.set_mode(size)
         if num == 0:
             data = [
                 [
@@ -385,6 +445,7 @@ def play():
                 ]
             ]
     elif lvl == 2:
+        pygame.display.set_mode(size)
         if num == 0:
             data = [
                 [
@@ -468,6 +529,8 @@ def play():
             ]
 
     elif lvl == 3:
+        xtra = 316
+        pygame.display.set_mode((width+xtra, height+xtra))
         data = [
             [
                 [6, 0, 3, 7, 0, 5, 9, 0, 8],
@@ -531,7 +594,6 @@ def play():
         button_width + button_border * 2,
         button_height + button_border * 2
     )
-    pygame.display.set_mode(size)
 
     while True:
 
@@ -550,10 +612,10 @@ def play():
                 # if solve_btn.collidepoint(mouse_pos):
                 #     pygame.Surface.fill(pygame.display.get_surface(), white)
                 #     active_cell = None
-                #     draw_board(active_cell, cells, game)
+                #     draw_board(active_cell, cells, game, area)
                 #     reset_btn = draw_button(
                 #         width - buffer - button_border*2 - button_width,
-                #         height - button_height - button_border*2 - buffer,
+                #         height - button_height - button_border*2 - buffer + xtra,
                 #         button_width,
                 #         button_height,
                 #         button_border,
@@ -563,7 +625,7 @@ def play():
                 #     )
                 #     solve_btn = draw_button(
                 #         width - buffer*2 - button_border*4 - button_width*2,
-                #         height - button_height - button_border*2 - buffer,
+                #         height - button_height - button_border*2 - buffer + xtra,
                 #         button_width,
                 #         button_height,
                 #         button_border,
@@ -572,6 +634,7 @@ def play():
                 #         'Visual Solve'
                 #     )
                 #     pygame.display.flip()
+                #     visual_solve(game, cells, area)
 
                 if back_btn.collidepoint(mouse_pos):
                     screen = "level"
@@ -618,7 +681,7 @@ def play():
         draw_board(active_cell, cells, game, area)
         reset_btn = draw_button(
             width - buffer - button_border * 2 - button_width,
-            height - button_height - button_border * 2 - buffer,
+            height - button_height - button_border * 2 - buffer + xtra,
             button_width,
             button_height,
             button_border,
@@ -628,7 +691,7 @@ def play():
         )
         solve_btn = draw_button(
             width - buffer * 2 - button_border * 4 - button_width * 2,
-            height - button_height - button_border * 2 - buffer,
+            height - button_height - button_border * 2 - buffer + xtra,
             button_width,
             button_height,
             button_border,
@@ -640,7 +703,7 @@ def play():
         if reset_btn.collidepoint(pygame.mouse.get_pos()):
             reset_btn = draw_button(
                 width - buffer - button_border * 2 - button_width,
-                height - button_height - button_border * 2 - buffer,
+                height - button_height - button_border * 2 - buffer + xtra,
                 button_width,
                 button_height,
                 button_border,
@@ -651,7 +714,7 @@ def play():
         if solve_btn.collidepoint(pygame.mouse.get_pos()):
             solve_btn = draw_button(
                 width - buffer * 2 - button_border * 4 - button_width * 2,
-                height - button_height - button_border * 2 - buffer,
+                height - button_height - button_border * 2 - buffer + xtra,
                 button_width,
                 button_height,
                 button_border,
@@ -662,7 +725,7 @@ def play():
 
         back_btn = draw_button(
             width - buffer * 3 - button_border * 6 - button_width * 3,
-            height - button_height - button_border * 2 - buffer,
+            height - button_height - button_border * 2 - buffer + xtra,
             button_width,
             button_height,
             button_border,
@@ -673,7 +736,7 @@ def play():
         if back_btn.collidepoint(pygame.mouse.get_pos()):
             back_btn = draw_button(
                 width - buffer * 3 - button_border * 6 - button_width * 3,
-                height - button_height - button_border * 2 - buffer,
+                height - button_height - button_border * 2 - buffer + xtra,
                 button_width,
                 button_height,
                 button_border,
