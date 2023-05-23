@@ -723,10 +723,10 @@ def play():
     cells = create_cells(data)
     active_cell = None
     solve_rect = pygame.Rect(
-        w/2 - (button_width + button_border),
-        h/2 - (button_height + button_border),
-        button_width + button_border * 2,
-        button_height + button_border * 2
+        0,
+        0,
+        w,
+        h
     )
 
     if lvl != 3:
@@ -850,8 +850,8 @@ def play():
 
         if not game.get_empty_cell():
             if check_sudoku(game):
-                font = pygame.font.Font(None, 36)
-                text = font.render('Solved!', 1, green)
+                font = pygame.font.Font(None, 100)
+                text = font.render('Solved!', 1, green, (0, 0, 0, 50))
                 textbox = text.get_rect(center=(solve_rect.center))
                 pygame.Surface.blit(
                     pygame.display.get_surface(), text, textbox)
@@ -962,7 +962,7 @@ def level():
                     return
 
         # GUI
-        pygame.Surface.fill(pygame.display.get_surface(), white)
+        pygame.Surface.fill(pygame.display.get_surface(), black)
         lvl1_btn = draw_button(
             300 / 2 - (button_width + button_border) / 2,
             height - (button_height + button_border) * 9,
@@ -1056,7 +1056,8 @@ def level():
 
 def menu():
     global screen, run
-    pygame.display.set_mode((300, height))
+    pygame.display.set_mode((width+300, height+100))
+    logo = pygame.image.load("assets/logo_b_2.png").convert()
 
     while True:
 
@@ -1077,10 +1078,12 @@ def menu():
                     return
 
         # GUI
-        pygame.Surface.fill(pygame.display.get_surface(), white)
+        pygame.Surface.fill(pygame.display.get_surface(), black)
+        pygame.Surface.blit(pygame.display.get_surface(), logo, (120, 0))
+
         play_btn = draw_button(
-            300 / 2 - (button_width + button_border) / 2,
-            height / 2 - (button_height + button_border) / 2,
+            (width+300)/2 - (button_width + button_border) / 2,
+            height / 2 - (button_height + button_border) / 2 + 150,
             button_width,
             button_height,
             button_border,
@@ -1090,8 +1093,8 @@ def menu():
         )
         if play_btn.collidepoint(pygame.mouse.get_pos()):
             play_btn = draw_button(
-                300 / 2 - (button_width + button_border) / 2,
-                height / 2 - (button_height + button_border) / 2,
+                (width+300)/2 - (button_width + button_border) / 2,
+                height / 2 - (button_height + button_border) / 2 + 150,
                 button_width,
                 button_height,
                 button_border,
@@ -1101,8 +1104,8 @@ def menu():
             )
 
         credit_btn = draw_button(
-            300 / 2 - (button_width + button_border) / 2,
-            height / 2 + (button_height + button_border),
+            (width+300)/2 - (button_width + button_border) / 2,
+            height / 2 + (button_height + button_border) + 150,
             button_width,
             button_height,
             button_border,
@@ -1112,8 +1115,8 @@ def menu():
         )
         if credit_btn.collidepoint(pygame.mouse.get_pos()):
             credit_btn = draw_button(
-                300 / 2 - (button_width + button_border) / 2,
-                height / 2 + (button_height + button_border),
+                (width+300)/2 - (button_width + button_border) / 2,
+                height / 2 + (button_height + button_border) + 150,
                 button_width,
                 button_height,
                 button_border,
