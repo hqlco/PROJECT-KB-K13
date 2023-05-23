@@ -367,6 +367,7 @@ def check_sudoku(sudoku):
 def hint(game, data, area, len_p, len_r, len_c):
     solved = Sudoku(data, area)
     solved.solve()
+    loop = 0
     while True:
         if len_p > 1:
             p = random.randrange(0, len_p-1)
@@ -376,15 +377,24 @@ def hint(game, data, area, len_p, len_r, len_c):
         c = random.randrange(0, len_c-1)
         if game.board[p][r][c].editable and game.board[p][r][c].value is None:
             break
+
+        if loop > 10000:
+            cell = game.get_empty_cell()
+            p = cell.papan
+            r = cell.row
+            c = cell.col
+            break
+        loop+=1
     game.board[p][r][c].value = solved.board[p][r][c].value
 
 
 def play():
-    global screen, run, lvl
+    global screen, run, lvl, region_dict
     num = random.randint(0, 2)
     if lvl == 1:
-        pygame.display.set_mode(
-            (width + button_width + button_border*2 + buffer*2, 472 + buffer))
+        w = width + button_width + button_border*2 + buffer*2
+        h = 472 + buffer
+        pygame.display.set_mode((w,h))
         if num == 0:
             data = [
                 [
@@ -467,8 +477,9 @@ def play():
                 ]
             ]
     elif lvl == 2:
-        pygame.display.set_mode(
-            (width + button_width + button_border*2 + buffer*2, 472 + buffer))
+        w = width + button_width + button_border*2 + buffer*2
+        h = 472 + buffer
+        pygame.display.set_mode((w,h))
         if num == 0:
             data = [
                 [
@@ -552,7 +563,9 @@ def play():
             ]
 
     elif lvl == 3:
-        pygame.display.set_mode((width+316, height+316))
+        w = width+316
+        h = height+316
+        pygame.display.set_mode((w,h))
         if num == 0:
             data = [
                 [
@@ -703,14 +716,15 @@ def play():
     else:
         raise Exception("Level Error: Out Of Bound")
 
+    region_dict = []
     dictConv(area)
     game = Sudoku(data, region_dict)
     # printdict(region_dict[0])
     cells = create_cells(data)
     active_cell = None
     solve_rect = pygame.Rect(
-        buffer,
-        height - button_height - button_border * 2 - buffer,
+        w/2 - (button_width + button_border),
+        h/2 - (button_height + button_border),
         button_width + button_border * 2,
         button_height + button_border * 2
     )
@@ -861,7 +875,7 @@ def play():
                 button_border,
                 inactive_btn,
                 black,
-                'Visual Solve'
+                'Solve'
             )
 
             if reset_btn.collidepoint(pygame.mouse.get_pos()):
@@ -884,7 +898,7 @@ def play():
                     button_border,
                     active_btn,
                     black,
-                    'Visual Solve'
+                    'Solve'
                 )
 
             hint_btn = draw_button(
